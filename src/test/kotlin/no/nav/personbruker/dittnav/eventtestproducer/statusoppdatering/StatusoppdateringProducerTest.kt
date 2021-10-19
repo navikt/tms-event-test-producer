@@ -11,7 +11,6 @@ import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be empty`
 import org.amshove.kluent.`should not be null`
 import org.junit.jupiter.api.Test
-import java.util.*
 
 class StatusoppdateringProducerTest {
     private val fodselsnummer = "12345678910"

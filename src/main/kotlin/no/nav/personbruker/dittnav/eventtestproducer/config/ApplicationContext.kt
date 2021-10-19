@@ -3,8 +3,6 @@ package no.nav.personbruker.dittnav.eventtestproducer.config
 import no.nav.brukernotifikasjon.schemas.builders.domain.Eventtype
 import no.nav.brukernotifikasjon.schemas.input.*
 import no.nav.personbruker.dittnav.eventtestproducer.beskjed.BeskjedProducer
-import no.nav.personbruker.dittnav.eventtestproducer.common.database.Database
-import no.nav.personbruker.dittnav.eventtestproducer.common.database.PostgresDatabase
 import no.nav.personbruker.dittnav.eventtestproducer.common.kafka.KafkaProducerWrapper
 import no.nav.personbruker.dittnav.eventtestproducer.done.DoneEventService
 import no.nav.personbruker.dittnav.eventtestproducer.done.DoneProducer
@@ -17,7 +15,6 @@ import org.apache.kafka.clients.producer.KafkaProducer
 class ApplicationContext {
 
     val environment = Environment()
-    val database: Database = PostgresDatabase(environment)
 
     val kafkaProducerBeskjed = KafkaProducerWrapper(environment.beskjedInputTopicName, KafkaProducer<NokkelInput, BeskjedInput>(Kafka.producerProps(environment, Eventtype.BESKJED)))
     val beskjedProducer = BeskjedProducer(environment, kafkaProducerBeskjed)
@@ -34,7 +31,7 @@ class ApplicationContext {
     val kafkaProducerStatusoppdatering = KafkaProducerWrapper(environment.statusoppdateringInputTopicName, KafkaProducer<NokkelInput, StatusoppdateringInput>(Kafka.producerProps(environment, Eventtype.STATUSOPPDATERING)))
     val statusoppdateringProducer = StatusoppdateringProducer(environment, kafkaProducerStatusoppdatering)
 
-    val doneEventService = DoneEventService(database, doneProducer)
+   // val doneEventService = DoneEventService(database, doneProducer)
     val testDataService = TestDataService(doneProducer, beskjedProducer, oppgaveProducer, innboksProducer, statusoppdateringProducer)
 
 }

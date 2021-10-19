@@ -61,7 +61,6 @@ val PipelineContext<Unit, ApplicationCall>.innloggetBruker: InnloggetBruker
 
 private fun Application.configureShutdownHook(appContext: ApplicationContext) {
     environment.monitor.subscribe(ApplicationStopPreparing) {
-        appContext.database.dataSource.close()
         appContext.kafkaProducerBeskjed.flushAndClose()
         appContext.kafkaProducerDone.flushAndClose()
         appContext.kafkaProducerInnboks.flushAndClose()
