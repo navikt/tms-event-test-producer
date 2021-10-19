@@ -1,9 +1,0 @@
-{
-  "namespace": "personbruker",
-  "cluster": "preprod",
-  "environment": "dev",
-  "ingresses": [
-    "https://www.dev.nav.no/person/dittnav-event-test-producer",
-    "https://dittnav-event-test-producer.dev.nav.no/person/dittnav-event-test-producer"
-  ]
-}
