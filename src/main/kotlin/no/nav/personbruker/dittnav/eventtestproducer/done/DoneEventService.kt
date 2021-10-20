@@ -2,11 +2,10 @@ package no.nav.personbruker.dittnav.eventtestproducer.done
 
 import no.nav.brukernotifikasjon.schemas.builders.domain.Eventtype
 import no.nav.personbruker.dittnav.eventtestproducer.beskjed.Beskjed
-import no.nav.personbruker.dittnav.eventtestproducer.beskjed.getAktivBeskjedByFodselsnummer
 import no.nav.personbruker.dittnav.eventtestproducer.common.HandlerConsumer
 import no.nav.personbruker.dittnav.eventtestproducer.common.InnloggetBruker
-import no.nav.personbruker.dittnav.eventtestproducer.innboks.getAktivInnboksByFodselsnummer
-import no.nav.personbruker.dittnav.eventtestproducer.oppgave.getAktivOppgaveByFodselsnummer
+import no.nav.personbruker.dittnav.eventtestproducer.innboks.Innboks
+import no.nav.personbruker.dittnav.eventtestproducer.oppgave.Oppgave
 import no.nav.personbruker.dittnav.eventtestproducer.tokenx.EventhandlerTokendings
 
 class DoneEventService(
@@ -18,15 +17,12 @@ class DoneEventService(
     suspend fun markAllBrukernotifikasjonerAsDone(innloggetBruker: InnloggetBruker) {
         val exchangedToken = eventhandlerTokendings.exchangeToken(innloggetBruker)
         val activeBeskjedEvents = handlerConsumer.getActiveEvents<Beskjed>(Eventtype.BESKJED, exchangedToken)
-        
-        val beskjed = database.dbQuery { getAktivBeskjedByFodselsnummer(innloggetBruker) }
-        val oppgaver = database.dbQuery { getAktivOppgaveByFodselsnummer(innloggetBruker) }
-        val innboks = database.dbQuery { getAktivInnboksByFodselsnummer(innloggetBruker) }
-        val alleBrukernotifikasjoner = beskjed + oppgaver + innboks
+        val activeOppgaveEvents = handlerConsumer.getActiveEvents<Oppgave>(Eventtype.OPPGAVE, exchangedToken)
+        val activeInnboksEvents = handlerConsumer.getActiveEvents<Innboks>(Eventtype.INNBOKS, exchangedToken)
+        val alleBrukernotifikasjoner = activeBeskjedEvents + activeOppgaveEvents + activeInnboksEvents
 
         alleBrukernotifikasjoner.forEach { brukernotifikasjon ->
             doneProducer.produceDoneEventForSpecifiedEvent(innloggetBruker, brukernotifikasjon)
         }
     }
-
 }

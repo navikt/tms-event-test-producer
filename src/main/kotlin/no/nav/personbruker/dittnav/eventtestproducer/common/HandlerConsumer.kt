@@ -7,7 +7,7 @@ import java.net.URL
 
 class HandlerConsumer(
     private val client: HttpClient,
-    private val eventhandlerBaseURL: String) {
+    private val eventhandlerBaseURL: URL) {
 
     suspend fun <T> getActiveEvents(eventtype: Eventtype, accessToken:AccessToken): List<T> {
         val pathToEndpoint = URL("$eventhandlerBaseURL/${eventtype.name}/aktive")

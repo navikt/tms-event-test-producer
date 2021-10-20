@@ -30,6 +30,8 @@ dependencies {
     implementation(Kafka.Confluent.avroSerializer)
     implementation(Ktor.auth)
     implementation(Ktor.authJwt)
+    implementation(Ktor.clientApache)
+    implementation(Ktor.clientSerializationJvm)
     implementation(Ktor.serialization)
     implementation(Ktor.serverNetty)
     implementation(Logback.classic)
