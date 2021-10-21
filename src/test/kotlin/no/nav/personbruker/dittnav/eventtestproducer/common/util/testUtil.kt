@@ -1,6 +1,7 @@
 package no.nav.personbruker.dittnav.eventtestproducer.common.util
 
 import no.nav.personbruker.dittnav.eventtestproducer.config.Environment
+import java.net.URL
 
 fun createPropertiesForTestEnvironment(): Environment {
     return Environment(
@@ -13,6 +14,8 @@ fun createPropertiesForTestEnvironment(): Environment {
         oppgaveInputTopicName = "ikkeIBruk",
         innboksInputTopicName = "ikkeIBruk",
         statusoppdateringInputTopicName = "ikkeIBruk",
-        doneInputTopicName = "ikkeIBruk"
+        doneInputTopicName = "ikkeIBruk",
+        eventHandlerURL = URL("http://ikkeIBruk"),
+        eventhandlerClientId = "ikkeIBruk"
     )
 }
