@@ -30,6 +30,8 @@ dependencies {
     implementation(Kafka.Confluent.avroSerializer)
     implementation(Ktor.auth)
     implementation(Ktor.authJwt)
+    implementation(Ktor.clientApache)
+    implementation(Ktor.clientSerializationJvm)
     implementation(Ktor.serialization)
     implementation(Ktor.serverNetty)
     implementation(Logback.classic)
@@ -40,6 +42,7 @@ dependencies {
     implementation(Prometheus.common)
     implementation(Prometheus.hotspot)
     implementation(Prometheus.logback)
+    implementation(Tms.KtorTokenSupport.tokendingsExchange)
 
     testImplementation(kotlin("test-junit5"))
     testImplementation(Bouncycastle.bcprovJdk15on)
