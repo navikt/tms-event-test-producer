@@ -23,8 +23,9 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.navikt:brukernotifikasjon-schemas:2.3.1")
+    implementation("com.github.navikt:brukernotifikasjon-schemas:2.4.0")
     implementation(DittNAV.Common.utils)
+    implementation(DittNAV.Common.logging)
     implementation(Hikari.cp)
     implementation(Kafka.Apache.clients)
     implementation(Kafka.Confluent.avroSerializer)

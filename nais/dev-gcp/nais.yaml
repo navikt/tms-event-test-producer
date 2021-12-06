@@ -1,34 +1,33 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: dittnav-event-test-producer
-  namespace: personbruker
+  name: tms-event-test-producer
+  namespace: min-side
   labels:
-    team: personbruker
+    team: min-side
 spec:
+  envFrom:
+    - secret: tms-event-test-producer-secrets
+    - configmap: loginservice-idporten
   image: {{version}}
   port: 8080
   liveness:
-    path: /dittnav-event-test-producer/isAlive
+    path: /tms-event-test-producer/isAlive
     initialDelay: 5
   readiness:
-    path: /dittnav-event-test-producer/isReady
+    path: /tms-event-test-producer/isReady
     initialDelay: 5
-  prometheus:
-    path: /dittnav-event-test-producer/metrics
-  idporten:
-    enabled: true
   replicas:
     min: 1
     max: 1
   ingresses:
-    - "https://person.dev.nav.no/dittnav-event-test-producer"
+    - "https://person.dev.nav.no/tms-event-test-producer"
   resources:
     limits:
-      cpu: 3000m
+      cpu: 2000m
       memory: 512Mi
     requests:
-      cpu: 2000m
+      cpu: 500m
       memory: 256Mi
   kafka:
     pool: nav-dev
