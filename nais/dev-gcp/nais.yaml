@@ -20,6 +20,13 @@ spec:
   replicas:
     min: 1
     max: 1
+  tokenx:
+    enabled: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: dittnav-event-handler
+          namespace: personbruker
   ingresses:
     - "https://person.dev.nav.no/tms-event-test-producer"
   resources:
