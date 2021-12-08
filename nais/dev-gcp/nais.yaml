@@ -38,3 +38,4 @@ spec:
       memory: 256Mi
   kafka:
     pool: nav-dev
+

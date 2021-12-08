@@ -12,6 +12,7 @@ data class Oppgave(
         override val systembruker: String,
         override val sikkerhetsnivaa: Int,
         override val sistOppdatert: ZonedDateTime,
+        val synligFremTil: ZonedDateTime?,
         override val tekst: String,
         override val link: String,
         override val aktiv: Boolean,
@@ -29,6 +30,7 @@ data class Oppgave(
                 "systembruker=***, " +
                 "sikkerhetsnivaa=$sikkerhetsnivaa, " +
                 "sistOppdatert=$sistOppdatert, " +
+                "synligFremTil=$synligFremTil, " +
                 "tekst=***, " +
                 "link=***, " +
                 "aktiv=$aktiv, " +

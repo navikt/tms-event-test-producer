@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 class OppgaveProducer(private val environment: Environment, private val oppgaveKafkaProducer: KafkaProducerWrapper<NokkelInput, OppgaveInput>) {
@@ -44,13 +45,15 @@ class OppgaveProducer(private val environment: Environment, private val oppgaveK
 
     fun createOppgaveInput(innloggetBruker: InnloggetBruker, dto: ProduceOppgaveDto): OppgaveInput {
         val now = LocalDateTime.now(ZoneOffset.UTC)
+        val weekFromNow = now.plus(7, ChronoUnit.DAYS)
         val builder = OppgaveInputBuilder()
-                .withTidspunkt(now)
-                .withTekst(dto.tekst)
-                .withLink(URL(dto.link))
-                .withSikkerhetsnivaa(innloggetBruker.innloggingsnivaa)
-                .withEksternVarsling(dto.eksternVarsling)
-                .withPrefererteKanaler(*getPrefererteKanaler(dto.prefererteKanaler).toTypedArray())
+            .withTidspunkt(now)
+            .withSynligFremTil(weekFromNow)
+            .withTekst(dto.tekst)
+            .withLink(URL(dto.link))
+            .withSikkerhetsnivaa(innloggetBruker.innloggingsnivaa)
+            .withEksternVarsling(dto.eksternVarsling)
+            .withPrefererteKanaler(*getPrefererteKanaler(dto.prefererteKanaler).toTypedArray())
         return builder.build()
     }
 }
