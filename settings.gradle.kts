@@ -1,1 +1,1 @@
-rootProject.name = "event-test-producer"
+rootProject.name = "tms-event-test-producer"

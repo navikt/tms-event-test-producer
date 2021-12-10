@@ -23,13 +23,16 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.navikt:brukernotifikasjon-schemas:1.1.0")
+    implementation("com.github.navikt:brukernotifikasjon-schemas:2.4.0")
     implementation(DittNAV.Common.utils)
+    implementation(DittNAV.Common.logging)
     implementation(Hikari.cp)
     implementation(Kafka.Apache.clients)
     implementation(Kafka.Confluent.avroSerializer)
     implementation(Ktor.auth)
     implementation(Ktor.authJwt)
+    implementation(Ktor.clientApache)
+    implementation(Ktor.clientSerializationJvm)
     implementation(Ktor.serialization)
     implementation(Ktor.serverNetty)
     implementation(Logback.classic)
@@ -40,6 +43,7 @@ dependencies {
     implementation(Prometheus.common)
     implementation(Prometheus.hotspot)
     implementation(Prometheus.logback)
+    implementation(Tms.KtorTokenSupport.tokendingsExchange)
 
     testImplementation(kotlin("test-junit5"))
     testImplementation(Bouncycastle.bcprovJdk15on)
