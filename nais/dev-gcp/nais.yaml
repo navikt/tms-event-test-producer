@@ -31,10 +31,10 @@ spec:
     - "https://person.dev.nav.no/tms-event-test-producer"
   resources:
     limits:
-      cpu: 2000m
+      cpu: 1000m
       memory: 512Mi
     requests:
-      cpu: 500m
+      cpu: 20m
       memory: 256Mi
   kafka:
     pool: nav-dev
