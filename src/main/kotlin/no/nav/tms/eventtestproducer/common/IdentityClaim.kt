@@ -8,7 +8,7 @@ enum class IdentityClaim(val claimName : String) {
     companion object {
         fun fromClaimName(claimName: String): IdentityClaim {
             values().forEach { currentClaim ->
-                if (currentClaim.claimName == claimName.toLowerCase()) {
+                if (currentClaim.claimName == claimName.lowercase()) {
                     return currentClaim
                 }
             }
