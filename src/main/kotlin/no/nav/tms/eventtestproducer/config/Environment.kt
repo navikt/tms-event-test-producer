@@ -6,7 +6,7 @@ import java.net.URL
 
 data class Environment(
     val namespace: String = getEnvVar("NAIS_NAMESPACE"),
-    val appnavn: String = getEnvVar("NAIS_APP_NAME"),
+    val appnavn: String = "tms-event-test-producer",
     val beskjedInputTopicName: String = getEnvVar("OPEN_INPUT_BESKJED_TOPIC"),
     val oppgaveInputTopicName: String = getEnvVar("OPEN_INPUT_OPPGAVE_TOPIC"),
     val innboksInputTopicName: String = getEnvVar("OPEN_INPUT_INNBOKS_TOPIC"),
