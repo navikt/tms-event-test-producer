@@ -35,11 +35,13 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
     routing {
         healthApi()
         authenticate {
-            oppgaveApi(appContext.oppgaveProducer)
-            beskjedApi(appContext.beskjedProducer)
-            innboksApi(appContext.innboksProducer)
-            doneApi(appContext.doneEventService)
-            statusoppdateringApi(appContext.statusoppdateringProducer)
+            if(appContext.environment.enableApi) {
+                oppgaveApi(appContext.oppgaveProducer)
+                beskjedApi(appContext.beskjedProducer)
+                innboksApi(appContext.innboksProducer)
+                doneApi(appContext.doneEventService)
+                statusoppdateringApi(appContext.statusoppdateringProducer)
+            }
         }
     }
 
