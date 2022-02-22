@@ -15,6 +15,7 @@ fun createPropertiesForTestEnvironment(): Environment {
         statusoppdateringInputTopicName = "ikkeIBruk",
         doneInputTopicName = "ikkeIBruk",
         eventHandlerURL = URL("http://ikkeIBruk"),
-        eventhandlerClientId = "ikkeIBruk"
+        eventhandlerClientId = "ikkeIBruk",
+        corsAllowedOrigins = "localhost"
     )
 }

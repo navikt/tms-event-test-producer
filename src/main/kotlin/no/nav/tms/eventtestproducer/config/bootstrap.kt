@@ -3,6 +3,7 @@ package no.nav.tms.eventtestproducer.config
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
+import io.ktor.http.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import io.ktor.util.pipeline.*
@@ -21,6 +22,12 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
 
     install(ContentNegotiation) {
         json()
+    }
+
+    install(CORS) {
+        host(appContext.environment.corsAllowedOrigins, listOf(appContext.environment.corsAllowedSchemes))
+        allowCredentials = true
+        header(HttpHeaders.ContentType)
     }
 
     val config = this.environment.config
