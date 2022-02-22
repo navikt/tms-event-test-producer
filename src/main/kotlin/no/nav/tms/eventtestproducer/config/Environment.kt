@@ -1,8 +1,7 @@
 package no.nav.tms.eventtestproducer.config
 
-import no.nav.personbruker.dittnav.common.util.config.BooleanEnvVar
 import no.nav.personbruker.dittnav.common.util.config.BooleanEnvVar.getEnvVarAsBoolean
-import no.nav.personbruker.dittnav.common.util.config.StringEnvVar
+import no.nav.personbruker.dittnav.common.util.config.StringEnvVar.getEnvVar
 import no.nav.personbruker.dittnav.common.util.config.UrlEnvVar.getEnvVarAsURL
 import no.nav.tms.eventtestproducer.config.ConfigUtil.isCurrentlyRunningOnNais
 import java.net.URL
@@ -22,7 +21,7 @@ data class Environment(
     val eventhandlerClientId: String = getEnvVar("EVENTHANDLER_CLIENT_ID"),
     val enableApi: Boolean = getEnvVarAsBoolean("ENABLE_API", false),
     val corsAllowedOrigins: String = getEnvVar("CORS_ALLOWED_ORIGINS"),
-    val corsAllowedSchemes: String = StringEnvVar.getEnvVar("CORS_ALLOWED_SCHEMES", "https")
+    val corsAllowedSchemes: String = getEnvVar("CORS_ALLOWED_SCHEMES", "https")
 )
 
 data class SecurityConfig(
