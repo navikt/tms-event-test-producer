@@ -2,6 +2,7 @@ package no.nav.tms.eventtestproducer.config
 
 import io.ktor.client.features.json.serializer.*
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import no.nav.brukernotifikasjon.schemas.builders.domain.Eventtype
 import no.nav.brukernotifikasjon.schemas.input.*
 import no.nav.tms.eventtestproducer.beskjed.BeskjedProducer
@@ -21,7 +22,7 @@ class ApplicationContext {
 
     val environment = Environment()
 
-    val httpClient = HttpClientBuilder.build(KotlinxSerializer(Json))
+    val httpClient = HttpClientBuilder.build(KotlinxSerializer(Json { ignoreUnknownKeys = true }))
 
     val handlerConsumer = HandlerConsumer(httpClient, environment.eventHandlerURL)
 
