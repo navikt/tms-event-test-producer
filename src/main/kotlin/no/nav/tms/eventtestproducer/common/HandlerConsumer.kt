@@ -10,7 +10,7 @@ class HandlerConsumer(
     private val eventhandlerBaseURL: URL) {
 
     suspend fun <T> getActiveEvents(eventtype: Eventtype, accessToken:AccessToken): List<T> {
-        val pathToEndpoint = URL("$eventhandlerBaseURL/${eventtype.name}/aktive")
+        val pathToEndpoint = URL("$eventhandlerBaseURL/fetch/${eventtype.name.lowercase()}/aktive")
         return client.get(pathToEndpoint, accessToken)
     }
 }
