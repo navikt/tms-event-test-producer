@@ -1,17 +1,18 @@
 package no.nav.tms.eventtestproducer.statusoppdatering
 
-import java.time.ZonedDateTime
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Statusoppdatering(
         val id: Int,
         val systembruker: String,
         val eventId: String,
-        val eventTidspunkt: ZonedDateTime,
+        val eventTidspunkt: String,
         val fodselsnummer: String,
         val grupperingsId: String,
         val link: String,
         val sikkerhetsnivaa: Int,
-        val sistOppdatert: ZonedDateTime,
+        val sistOppdatert: String,
         val statusGlobal: String,
         val statusIntern: String?,
         val sakstema: String

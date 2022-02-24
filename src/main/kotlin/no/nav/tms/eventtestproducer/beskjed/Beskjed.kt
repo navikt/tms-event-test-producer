@@ -1,19 +1,21 @@
 package no.nav.tms.eventtestproducer.beskjed
 
+import kotlinx.serialization.Serializable
 import no.nav.tms.eventtestproducer.common.Brukernotifikasjon
 import java.time.ZonedDateTime
 
+@Serializable
 data class Beskjed(
         override val id: Int,
         val uid: String,
         override val fodselsnummer: String,
         override val grupperingsId: String,
         override val eventId: String,
-        override val eventTidspunkt: ZonedDateTime,
+        override val eventTidspunkt: String,
         override val systembruker: String,
         override val sikkerhetsnivaa: Int,
-        override val sistOppdatert: ZonedDateTime,
-        val synligFremTil: ZonedDateTime?,
+        override val sistOppdatert: String,
+        val synligFremTil: String?,
         override val tekst: String,
         override val link: String?,
         override val aktiv: Boolean,
