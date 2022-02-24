@@ -18,7 +18,7 @@ class DoneProducer(private val environment: Environment, private val doneKafkaPr
 
     fun produceDoneEventForSpecifiedEvent(innloggetBruker: InnloggetBruker, eventThatsDone: BrukernotifikasjonNokkel) {
         try {
-            val key = createNokkelInput(innloggetBruker, eventThatsDone.eventId)
+            val key = createNokkelInput(innloggetBruker, eventThatsDone.eventId, eventThatsDone.grupperingsId)
             val doneEvent = createDoneInput()
             sendEventToKafka(key, doneEvent)
         } catch (e: Exception) {
@@ -30,10 +30,11 @@ class DoneProducer(private val environment: Environment, private val doneKafkaPr
         doneKafkaProducer.sendEvent(key, event)
     }
 
-    fun createNokkelInput(innloggetBruker: InnloggetBruker, eventId: String): NokkelInput {
+    fun createNokkelInput(innloggetBruker: InnloggetBruker, eventId: String, grupperingsId: String): NokkelInput {
         return NokkelInputBuilder()
             .withEventId(eventId)
             .withFodselsnummer(innloggetBruker.ident)
+            .withGrupperingsId(grupperingsId)
             .withNamespace(environment.namespace)
             .withAppnavn(environment.appnavn)
             .build()
