@@ -1,5 +1,6 @@
 package no.nav.tms.eventtestproducer.done
 
+import no.nav.brukernotifikasjon.schemas.builders.domain.Eventtype
 import no.nav.tms.eventtestproducer.common.HandlerConsumer
 import no.nav.tms.eventtestproducer.common.InnloggetBruker
 import no.nav.tms.eventtestproducer.tokenx.EventhandlerTokendings
@@ -12,9 +13,9 @@ class DoneEventService(
 
     suspend fun markAllBrukernotifikasjonerAsDone(innloggetBruker: InnloggetBruker) {
         val exchangedToken = eventhandlerTokendings.exchangeToken(innloggetBruker)
-        val activeBeskjedEvents = handlerConsumer.getActiveBeskjedEvents(exchangedToken)
-        val activeOppgaveEvents = handlerConsumer.getActiveOppgaveEvents(exchangedToken)
-        val activeInnboksEvents = handlerConsumer.getActiveInnboksEvents(exchangedToken)
+        val activeBeskjedEvents = handlerConsumer.getActiveEvents(Eventtype.BESKJED, exchangedToken)
+        val activeOppgaveEvents = handlerConsumer.getActiveEvents(Eventtype.OPPGAVE, exchangedToken)
+        val activeInnboksEvents = handlerConsumer.getActiveEvents(Eventtype.INNBOKS, exchangedToken)
         val alleBrukernotifikasjoner = activeBeskjedEvents + activeOppgaveEvents + activeInnboksEvents
 
         alleBrukernotifikasjoner.forEach { brukernotifikasjon ->
