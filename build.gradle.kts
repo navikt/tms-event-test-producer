@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.navikt:brukernotifikasjon-schemas:2.4.0")
+    implementation("com.github.navikt:brukernotifikasjon-schemas:2.5.0")
     implementation(DittNAV.Common.utils)
     implementation(DittNAV.Common.logging)
     implementation(Hikari.cp)
@@ -32,6 +32,7 @@ dependencies {
     implementation(Ktor.clientApache)
     implementation(Ktor.clientSerializationJvm)
     implementation(Ktor.serialization)
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
     implementation(Ktor.serverNetty)
     implementation(Logback.classic)
     implementation(Logstash.logbackEncoder)
