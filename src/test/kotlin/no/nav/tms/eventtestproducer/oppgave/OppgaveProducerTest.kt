@@ -27,11 +27,11 @@ class OppgaveProducerTest {
     private val sikkerhetsnivaa = 4
     private val eksternVarsling = true
     private val prefererteKanaler = listOf(PreferertKanal.SMS.toString(), PreferertKanal.EPOST.toString())
-    private val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker(fodselsnummer)
     private val synligFremTil = Clock.System.now().plus(7, DateTimeUnit.DAY, TimeZone.UTC)
     private val epostVarslingstekst = "<p>Du har fått en ny oppgave på Ditt NAV</p>"
     private val epostVarslingstittel = "Oppgave"
     private val smsVarslingstekst = "Du har fått en ny oppgave på Ditt NAV"
+    private val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker(fodselsnummer)
     private val environment = createPropertiesForTestEnvironment()
     private val oppgaveKafkaProducer = mockk<KafkaProducerWrapper<NokkelInput, OppgaveInput>>()
     private val oppgaveProducer = OppgaveProducer(environment, oppgaveKafkaProducer)
