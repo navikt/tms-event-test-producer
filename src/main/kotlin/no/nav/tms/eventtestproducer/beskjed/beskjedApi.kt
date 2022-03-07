@@ -1,7 +1,6 @@
 package no.nav.tms.eventtestproducer.beskjed
 
-import io.ktor.routing.Route
-import io.ktor.routing.post
+import io.ktor.routing.*
 import no.nav.tms.eventtestproducer.config.innloggetBruker
 import no.nav.tms.eventtestproducer.config.respondForParameterType
 

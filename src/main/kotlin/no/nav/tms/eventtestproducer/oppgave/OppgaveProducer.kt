@@ -1,5 +1,8 @@
 package no.nav.tms.eventtestproducer.oppgave
 
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toLocalDateTime
 import no.nav.brukernotifikasjon.schemas.builders.NokkelInputBuilder
 import no.nav.brukernotifikasjon.schemas.builders.OppgaveInputBuilder
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
@@ -45,14 +48,16 @@ class OppgaveProducer(private val environment: Environment, private val oppgaveK
 
     fun createOppgaveInput(innloggetBruker: InnloggetBruker, dto: ProduceOppgaveDto): OppgaveInput {
         val now = LocalDateTime.now(ZoneOffset.UTC)
-        val weekFromNow = now.plus(7, ChronoUnit.DAYS)
         val builder = OppgaveInputBuilder()
             .withTidspunkt(now)
-            .withSynligFremTil(weekFromNow)
+            .withSynligFremTil(dto.synligFremTil?.toLocalDateTime(TimeZone.UTC)?.toJavaLocalDateTime())
             .withTekst(dto.tekst)
             .withLink(URL(dto.link))
             .withSikkerhetsnivaa(innloggetBruker.innloggingsnivaa)
             .withEksternVarsling(dto.eksternVarsling)
+            .withEpostVarslingstekst(dto.epostVarslingstekst)
+            .withEpostVarslingstittel(dto.epostVarslingstittel)
+            .withSmsVarslingstekst(dto.smsVarslingstekst)
             .withPrefererteKanaler(*getPrefererteKanaler(dto.prefererteKanaler).toTypedArray())
         return builder.build()
     }

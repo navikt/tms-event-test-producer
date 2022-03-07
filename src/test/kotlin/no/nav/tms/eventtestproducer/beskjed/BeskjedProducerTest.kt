@@ -2,14 +2,20 @@ package no.nav.tms.eventtestproducer.beskjed
 
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.*
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
 import no.nav.brukernotifikasjon.schemas.builders.domain.PreferertKanal
 import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.tms.eventtestproducer.common.InnloggetBrukerObjectMother
 import no.nav.tms.eventtestproducer.common.kafka.KafkaProducerWrapper
 import no.nav.tms.eventtestproducer.common.util.createPropertiesForTestEnvironment
-import org.amshove.kluent.*
+import org.amshove.kluent.`should be empty`
+import org.amshove.kluent.`should be equal to`
+import org.amshove.kluent.`should not be empty`
+import org.amshove.kluent.`should not be null`
 import org.junit.jupiter.api.Test
 
 class BeskjedProducerTest {
