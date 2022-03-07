@@ -23,6 +23,9 @@ class InnboksProducerTest {
     private val sikkerhetsnivaa = 4
     private val eksternVarsling = true
     private val prefererteKanaler = listOf(PreferertKanal.SMS.toString(), PreferertKanal.EPOST.toString())
+    private val epostVarslingstekst = "<p>Du har fått en ny melding på Ditt NAV</p>"
+    private val epostVarslingstittel = "Innboks"
+    private val smsVarslingstekst = "Du har fått en ny melding på Ditt NAV"
     private val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker(fodselsnummer)
     private val environment = createPropertiesForTestEnvironment()
     private val innboksKafkaProducer = mockk<KafkaProducerWrapper<NokkelInput, InnboksInput>>()
@@ -32,7 +35,7 @@ class InnboksProducerTest {
     @Test
     fun `should create innboks-event`() {
         runBlocking {
-            val innboksDto = ProduceInnboksDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler)
+            val innboksDto = ProduceInnboksDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, epostVarslingstekst, epostVarslingstittel, smsVarslingstekst)
             val innboksKafkaEvent = innboksProducer.createInnboksInput(innloggetBruker, innboksDto)
             innboksKafkaEvent.getTidspunkt().`should not be null`()
             innboksKafkaEvent.getLink() `should be equal to` link
@@ -40,6 +43,9 @@ class InnboksProducerTest {
             innboksKafkaEvent.getSikkerhetsnivaa() `should be equal to` sikkerhetsnivaa
             innboksKafkaEvent.getEksternVarsling() `should be equal to` true
             innboksKafkaEvent.getPrefererteKanaler() `should be equal to` prefererteKanaler
+            innboksKafkaEvent.getEpostVarslingstekst() `should be equal to` epostVarslingstekst
+            innboksKafkaEvent.getEpostVarslingstittel() `should be equal to` epostVarslingstittel
+            innboksKafkaEvent.getSmsVarslingstekst() `should be equal to` smsVarslingstekst
         }
     }
 
@@ -63,4 +69,24 @@ class InnboksProducerTest {
         innboksKafkaEvent.getPrefererteKanaler().`should be empty`()
     }
 
+    @Test
+    fun `should allow no epostVarslingstekst value`() {
+        val innboksDto = ProduceInnboksDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, epostVarslingstekst = null)
+        val innboksKafkaEvent = innboksProducer.createInnboksInput(innloggetBruker, innboksDto)
+        innboksKafkaEvent.getEpostVarslingstekst() `should be equal to` null
+    }
+
+    @Test
+    fun `should allow no epostVarslingstittel value`() {
+        val innboksDto = ProduceInnboksDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, epostVarslingstittel = null)
+        val innboksKafkaEvent = innboksProducer.createInnboksInput(innloggetBruker, innboksDto)
+        innboksKafkaEvent.getEpostVarslingstittel() `should be equal to` null
+    }
+
+    @Test
+    fun `should allow no smsVarslingstekst value`() {
+        val innboksDto = ProduceInnboksDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, smsVarslingstekst = null)
+        val innboksKafkaEvent = innboksProducer.createInnboksInput(innloggetBruker, innboksDto)
+        innboksKafkaEvent.getSmsVarslingstekst() `should be equal to` null
+    }
 }

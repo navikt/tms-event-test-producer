@@ -1,5 +1,8 @@
 package no.nav.tms.eventtestproducer.beskjed
 
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toLocalDateTime
 import no.nav.brukernotifikasjon.schemas.builders.BeskjedInputBuilder
 import no.nav.brukernotifikasjon.schemas.builders.NokkelInputBuilder
 import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
@@ -12,7 +15,6 @@ import org.slf4j.LoggerFactory
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 class BeskjedProducer(private val environment: Environment, private val beskjedKafkaProducer: KafkaProducerWrapper<NokkelInput, BeskjedInput>) {
@@ -45,13 +47,15 @@ class BeskjedProducer(private val environment: Environment, private val beskjedK
 
     fun createBeskjedInput(innloggetBruker: InnloggetBruker, dto: ProduceBeskjedDto): BeskjedInput {
         val now = LocalDateTime.now(ZoneOffset.UTC)
-        val weekFromNow = now.plus(7, ChronoUnit.DAYS)
         val builder = BeskjedInputBuilder()
                 .withTidspunkt(now)
-                .withSynligFremTil(weekFromNow)
                 .withTekst(dto.tekst)
                 .withSikkerhetsnivaa(innloggetBruker.innloggingsnivaa)
+                .withSynligFremTil(dto.synligFremTil?.toLocalDateTime(TimeZone.UTC)?.toJavaLocalDateTime())
                 .withEksternVarsling(dto.eksternVarsling)
+                .withEpostVarslingstekst(dto.epostVarslingstekst)
+                .withEpostVarslingstittel(dto.epostVarslingstittel)
+                .withSmsVarslingstekst(dto.smsVarslingstekst)
                 .withPrefererteKanaler(*getPrefererteKanaler(dto.prefererteKanaler).toTypedArray())
         if(!dto.link.isNullOrBlank()) {
             builder.withLink(URL(dto.link))

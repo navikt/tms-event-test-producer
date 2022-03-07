@@ -50,6 +50,9 @@ class InnboksProducer(private val environment: Environment, private val innboksK
             .withLink(URL(dto.link))
             .withSikkerhetsnivaa(innloggetBruker.innloggingsnivaa)
             .withEksternVarsling(dto.eksternVarsling)
+            .withEpostVarslingstekst(dto.epostVarslingstekst)
+            .withEpostVarslingstittel(dto.epostVarslingstittel)
+            .withSmsVarslingstekst(dto.smsVarslingstekst)
             .withPrefererteKanaler(*getPrefererteKanaler(dto.prefererteKanaler).toTypedArray())
         return builder.build()
     }
