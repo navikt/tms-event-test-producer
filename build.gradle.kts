@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.navikt:brukernotifikasjon-schemas:2.5.1")
+    implementation("com.github.navikt:brukernotifikasjon-schemas:uten-timestamp-millis-SNAPSHOT")
     implementation(DittNAV.Common.utils)
     implementation(DittNAV.Common.logging)
     implementation(Hikari.cp)
