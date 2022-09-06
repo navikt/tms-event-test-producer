@@ -12,7 +12,6 @@ fun createPropertiesForTestEnvironment(): Environment {
         beskjedInputTopicName = "ikkeIBruk",
         oppgaveInputTopicName = "ikkeIBruk",
         innboksInputTopicName = "ikkeIBruk",
-        statusoppdateringInputTopicName = "ikkeIBruk",
         doneInputTopicName = "ikkeIBruk",
         eventHandlerURL = URL("http://ikkeIBruk"),
         eventhandlerClientId = "ikkeIBruk",

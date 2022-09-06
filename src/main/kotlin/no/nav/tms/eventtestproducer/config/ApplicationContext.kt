@@ -2,7 +2,6 @@ package no.nav.tms.eventtestproducer.config
 
 import io.ktor.client.features.json.serializer.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import no.nav.brukernotifikasjon.schemas.builders.domain.Eventtype
 import no.nav.brukernotifikasjon.schemas.input.*
 import no.nav.tms.eventtestproducer.beskjed.BeskjedProducer
@@ -13,7 +12,6 @@ import no.nav.tms.eventtestproducer.done.DoneEventService
 import no.nav.tms.eventtestproducer.done.DoneProducer
 import no.nav.tms.eventtestproducer.innboks.InnboksProducer
 import no.nav.tms.eventtestproducer.oppgave.OppgaveProducer
-import no.nav.tms.eventtestproducer.statusoppdatering.StatusoppdateringProducer
 import no.nav.tms.eventtestproducer.tokenx.EventhandlerTokendings
 import no.nav.tms.token.support.tokendings.exchange.TokendingsServiceBuilder
 import org.apache.kafka.clients.producer.KafkaProducer
@@ -40,9 +38,6 @@ class ApplicationContext {
 
     val kafkaProducerDone = KafkaProducerWrapper(environment.doneInputTopicName, KafkaProducer<NokkelInput, DoneInput>(Kafka.producerProps(environment, Eventtype.DONE)))
     val doneProducer = DoneProducer(environment, kafkaProducerDone)
-
-    val kafkaProducerStatusoppdatering = KafkaProducerWrapper(environment.statusoppdateringInputTopicName, KafkaProducer<NokkelInput, StatusoppdateringInput>(Kafka.producerProps(environment, Eventtype.STATUSOPPDATERING)))
-    val statusoppdateringProducer = StatusoppdateringProducer(environment, kafkaProducerStatusoppdatering)
 
     val doneEventService = DoneEventService(handlerConsumer, eventhandlerTokendings, doneProducer)
 }

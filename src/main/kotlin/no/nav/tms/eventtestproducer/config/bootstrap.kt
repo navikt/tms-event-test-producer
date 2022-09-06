@@ -15,7 +15,6 @@ import no.nav.tms.eventtestproducer.common.healthApi
 import no.nav.tms.eventtestproducer.done.doneApi
 import no.nav.tms.eventtestproducer.innboks.innboksApi
 import no.nav.tms.eventtestproducer.oppgave.oppgaveApi
-import no.nav.tms.eventtestproducer.statusoppdatering.statusoppdateringApi
 
 fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()) {
     install(DefaultHeaders)
@@ -44,7 +43,6 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
                 beskjedApi(appContext.beskjedProducer)
                 innboksApi(appContext.innboksProducer)
                 doneApi(appContext.doneEventService)
-                statusoppdateringApi(appContext.statusoppdateringProducer)
             }
         }
     }
@@ -61,6 +59,5 @@ private fun Application.configureShutdownHook(appContext: ApplicationContext) {
         appContext.kafkaProducerDone.flushAndClose()
         appContext.kafkaProducerInnboks.flushAndClose()
         appContext.kafkaProducerOppgave.flushAndClose()
-        appContext.kafkaProducerStatusoppdatering.flushAndClose()
     }
 }
