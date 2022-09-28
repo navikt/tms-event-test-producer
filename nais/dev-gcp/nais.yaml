@@ -23,6 +23,9 @@ spec:
   tokenx:
     enabled: true
   accessPolicy:
+    inbound:
+      rules:
+        - application: tms-varsel-test
     outbound:
       rules:
         - application: dittnav-event-handler
