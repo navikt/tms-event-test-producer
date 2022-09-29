@@ -45,6 +45,12 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
                 doneApi(appContext.doneEventService)
             }
         }
+
+        authenticate {
+            get("/beskjed") {
+                call.respond(HttpStatusCode.OK)
+            }
+        }
     }
 
     configureShutdownHook(appContext)
