@@ -4,6 +4,7 @@ import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
 import io.ktor.http.*
+import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import io.ktor.util.pipeline.*
@@ -15,6 +16,7 @@ import no.nav.tms.eventtestproducer.common.healthApi
 import no.nav.tms.eventtestproducer.done.doneApi
 import no.nav.tms.eventtestproducer.innboks.innboksApi
 import no.nav.tms.eventtestproducer.oppgave.oppgaveApi
+import no.nav.tms.token.support.tokenx.validation.installTokenXAuth
 
 fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()) {
     install(DefaultHeaders)
@@ -23,16 +25,14 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
         json()
     }
 
+    installTokenXAuth() {
+        setAsDefault = true
+    }
+
     install(CORS) {
         host(appContext.environment.corsAllowedOrigins, listOf(appContext.environment.corsAllowedSchemes))
         allowCredentials = true
         header(HttpHeaders.ContentType)
-    }
-
-    val config = this.environment.config
-
-    install(Authentication) {
-        tokenValidationSupport(config = config)
     }
 
     routing {
