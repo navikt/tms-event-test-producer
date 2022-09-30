@@ -43,7 +43,7 @@ dependencies {
     implementation(Prometheus.hotspot)
     implementation(Prometheus.logback)
     implementation(Tms.KtorTokenSupport.tokendingsExchange)
-    implementation(Tms.KtorTokenSupport.tokenXValidation)
+    implementation(Tms.KtorTokenSupport.idportenSidecar)
 
     testImplementation(kotlin("test-junit5"))
     testImplementation(Bouncycastle.bcprovJdk15on)

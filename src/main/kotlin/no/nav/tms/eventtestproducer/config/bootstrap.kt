@@ -8,7 +8,6 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import io.ktor.util.pipeline.*
-import no.nav.security.token.support.ktor.tokenValidationSupport
 import no.nav.tms.eventtestproducer.beskjed.beskjedApi
 import no.nav.tms.eventtestproducer.common.InnloggetBruker
 import no.nav.tms.eventtestproducer.common.InnloggetBrukerFactory
@@ -16,7 +15,8 @@ import no.nav.tms.eventtestproducer.common.healthApi
 import no.nav.tms.eventtestproducer.done.doneApi
 import no.nav.tms.eventtestproducer.innboks.innboksApi
 import no.nav.tms.eventtestproducer.oppgave.oppgaveApi
-import no.nav.tms.token.support.tokenx.validation.installTokenXAuth
+import no.nav.tms.token.support.idporten.sidecar.installIdPortenAuth
+import no.nav.tms.token.support.idporten.sidecar.LoginLevel.LEVEL_3
 
 fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()) {
     install(DefaultHeaders)
@@ -25,8 +25,9 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
         json()
     }
 
-    installTokenXAuth() {
+    installIdPortenAuth {
         setAsDefault = true
+        loginLevel = LEVEL_3
     }
 
     install(CORS) {
@@ -47,7 +48,7 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
         }
 
         authenticate {
-            get("/beskjed") {
+            get("/test") {
                 call.respond(HttpStatusCode.OK)
             }
         }
