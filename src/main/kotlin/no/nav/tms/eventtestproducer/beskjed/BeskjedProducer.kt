@@ -7,12 +7,10 @@ import no.nav.brukernotifikasjon.schemas.builders.BeskjedInputBuilder
 import no.nav.brukernotifikasjon.schemas.builders.NokkelInputBuilder
 import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
-import no.nav.tms.eventtestproducer.common.InnloggetBruker
 import no.nav.tms.eventtestproducer.common.getPrefererteKanaler
 import no.nav.tms.eventtestproducer.common.kafka.KafkaProducerWrapper
 import no.nav.tms.eventtestproducer.config.Environment
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
-import no.nav.tms.token.support.tokenx.validation.user.TokenXUser
 import org.slf4j.LoggerFactory
 import java.net.URL
 import java.time.LocalDateTime
