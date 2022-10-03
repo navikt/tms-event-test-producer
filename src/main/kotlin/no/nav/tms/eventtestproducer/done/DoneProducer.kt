@@ -4,10 +4,10 @@ import no.nav.brukernotifikasjon.schemas.builders.DoneInputBuilder
 import no.nav.brukernotifikasjon.schemas.builders.NokkelInputBuilder
 import no.nav.brukernotifikasjon.schemas.input.DoneInput
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
-import no.nav.tms.eventtestproducer.common.InnloggetBruker
 import no.nav.tms.eventtestproducer.common.BrukernotifikasjonNokkel
 import no.nav.tms.eventtestproducer.common.kafka.KafkaProducerWrapper
 import no.nav.tms.eventtestproducer.config.Environment
+import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -16,7 +16,7 @@ class DoneProducer(private val environment: Environment, private val doneKafkaPr
 
     private val log = LoggerFactory.getLogger(DoneProducer::class.java)
 
-    fun produceDoneEventForSpecifiedEvent(innloggetBruker: InnloggetBruker, eventThatsDone: BrukernotifikasjonNokkel) {
+    fun produceDoneEventForSpecifiedEvent(innloggetBruker: IdportenUser, eventThatsDone: BrukernotifikasjonNokkel) {
         try {
             val key = createNokkelInput(innloggetBruker, eventThatsDone.eventId, eventThatsDone.grupperingsId)
             val doneEvent = createDoneInput()
@@ -30,7 +30,7 @@ class DoneProducer(private val environment: Environment, private val doneKafkaPr
         doneKafkaProducer.sendEvent(key, event)
     }
 
-    fun createNokkelInput(innloggetBruker: InnloggetBruker, eventId: String, grupperingsId: String): NokkelInput {
+    fun createNokkelInput(innloggetBruker: IdportenUser, eventId: String, grupperingsId: String): NokkelInput {
         return NokkelInputBuilder()
             .withEventId(eventId)
             .withFodselsnummer(innloggetBruker.ident)

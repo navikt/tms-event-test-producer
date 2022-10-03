@@ -7,10 +7,10 @@ import no.nav.brukernotifikasjon.schemas.builders.NokkelInputBuilder
 import no.nav.brukernotifikasjon.schemas.builders.OppgaveInputBuilder
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
-import no.nav.tms.eventtestproducer.common.InnloggetBruker
 import no.nav.tms.eventtestproducer.common.getPrefererteKanaler
 import no.nav.tms.eventtestproducer.common.kafka.KafkaProducerWrapper
 import no.nav.tms.eventtestproducer.config.Environment
+import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import org.slf4j.LoggerFactory
 import java.net.URL
 import java.time.LocalDateTime
@@ -22,7 +22,7 @@ class OppgaveProducer(private val environment: Environment, private val oppgaveK
 
     private val log = LoggerFactory.getLogger(OppgaveProducer::class.java)
 
-    fun produceOppgaveEventForIdent(innloggetBruker: InnloggetBruker, dto: ProduceOppgaveDto) {
+    fun produceOppgaveEventForIdent(innloggetBruker: IdportenUser, dto: ProduceOppgaveDto) {
         try {
             val key = createNokkelInput(innloggetBruker, dto)
             val event = createOppgaveInput(innloggetBruker, dto)
@@ -36,7 +36,7 @@ class OppgaveProducer(private val environment: Environment, private val oppgaveK
         oppgaveKafkaProducer.sendEvent(key, event)
     }
 
-    fun createNokkelInput(innloggetBruker: InnloggetBruker, dto: ProduceOppgaveDto): NokkelInput {
+    fun createNokkelInput(innloggetBruker: IdportenUser, dto: ProduceOppgaveDto): NokkelInput {
         return NokkelInputBuilder()
             .withEventId(UUID.randomUUID().toString())
             .withGrupperingsId(dto.grupperingsid)
@@ -46,14 +46,14 @@ class OppgaveProducer(private val environment: Environment, private val oppgaveK
             .build()
     }
 
-    fun createOppgaveInput(innloggetBruker: InnloggetBruker, dto: ProduceOppgaveDto): OppgaveInput {
+    fun createOppgaveInput(innloggetBruker: IdportenUser, dto: ProduceOppgaveDto): OppgaveInput {
         val now = LocalDateTime.now(ZoneOffset.UTC)
         val builder = OppgaveInputBuilder()
             .withTidspunkt(now)
             .withSynligFremTil(dto.synligFremTil?.toLocalDateTime(TimeZone.UTC)?.toJavaLocalDateTime())
             .withTekst(dto.tekst)
             .withLink(URL(dto.link))
-            .withSikkerhetsnivaa(innloggetBruker.innloggingsnivaa)
+            .withSikkerhetsnivaa(innloggetBruker.loginLevel)
             .withEksternVarsling(dto.eksternVarsling)
             .withEpostVarslingstekst(dto.epostVarslingstekst)
             .withEpostVarslingstittel(dto.epostVarslingstittel)
