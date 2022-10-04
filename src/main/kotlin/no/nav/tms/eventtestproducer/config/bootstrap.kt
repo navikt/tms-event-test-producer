@@ -4,17 +4,19 @@ import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
 import io.ktor.http.*
+import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import io.ktor.util.pipeline.*
-import no.nav.security.token.support.ktor.tokenValidationSupport
 import no.nav.tms.eventtestproducer.beskjed.beskjedApi
-import no.nav.tms.eventtestproducer.common.InnloggetBruker
-import no.nav.tms.eventtestproducer.common.InnloggetBrukerFactory
 import no.nav.tms.eventtestproducer.common.healthApi
 import no.nav.tms.eventtestproducer.done.doneApi
 import no.nav.tms.eventtestproducer.innboks.innboksApi
 import no.nav.tms.eventtestproducer.oppgave.oppgaveApi
+import no.nav.tms.token.support.idporten.sidecar.installIdPortenAuth
+import no.nav.tms.token.support.idporten.sidecar.LoginLevel.LEVEL_3
+import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
+import no.nav.tms.token.support.idporten.sidecar.user.IdportenUserFactory
 
 fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()) {
     install(DefaultHeaders)
@@ -23,16 +25,15 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
         json()
     }
 
+    installIdPortenAuth {
+        setAsDefault = true
+        loginLevel = LEVEL_3
+    }
+
     install(CORS) {
         host(appContext.environment.corsAllowedOrigins, listOf(appContext.environment.corsAllowedSchemes))
         allowCredentials = true
         header(HttpHeaders.ContentType)
-    }
-
-    val config = this.environment.config
-
-    install(Authentication) {
-        tokenValidationSupport(config = config)
     }
 
     routing {
@@ -50,8 +51,8 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
     configureShutdownHook(appContext)
 }
 
-val PipelineContext<Unit, ApplicationCall>.innloggetBruker: InnloggetBruker
-    get() = InnloggetBrukerFactory.createNewInnloggetBruker(call.authentication.principal())
+val PipelineContext<Unit, ApplicationCall>.innloggetBruker: IdportenUser
+    get() = IdportenUserFactory.createIdportenUser(call)
 
 private fun Application.configureShutdownHook(appContext: ApplicationContext) {
     environment.monitor.subscribe(ApplicationStopPreparing) {
