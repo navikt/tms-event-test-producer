@@ -15,6 +15,7 @@ fun createPropertiesForTestEnvironment(): Environment {
         doneInputTopicName = "ikkeIBruk",
         eventHandlerURL = URL("http://ikkeIBruk"),
         eventhandlerClientId = "ikkeIBruk",
-        corsAllowedOrigins = "localhost"
+        corsAllowedOrigins = "localhost",
+        utkastTopicName = "ikkeIBruk"
     )
 }
