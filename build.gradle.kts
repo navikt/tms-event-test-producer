@@ -44,6 +44,7 @@ dependencies {
     implementation(Prometheus.logback)
     implementation(Tms.KtorTokenSupport.tokendingsExchange)
     implementation(Tms.KtorTokenSupport.idportenSidecar)
+    implementation(ULID.sulkyUlid)
 
     testImplementation(kotlin("test-junit5"))
     testImplementation(Bouncycastle.bcprovJdk15on)

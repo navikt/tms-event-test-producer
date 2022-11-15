@@ -20,7 +20,8 @@ data class Environment(
     val eventhandlerClientId: String = getEnvVar("EVENTHANDLER_CLIENT_ID"),
     val enableApi: Boolean = getEnvVarAsBoolean("ENABLE_API", false),
     val corsAllowedOrigins: String = getEnvVar("CORS_ALLOWED_ORIGINS"),
-    val corsAllowedSchemes: String = getEnvVar("CORS_ALLOWED_SCHEMES", "https")
+    val corsAllowedSchemes: String = getEnvVar("CORS_ALLOWED_SCHEMES", "https"),
+    val utkastTopicName: String = getEnvVar("UTKAST_TOPIC_NAME")
 )
 
 data class SecurityConfig(
@@ -40,8 +41,3 @@ data class SecurityVars(
     val aivenSchemaRegistryUser: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_USER"),
     val aivenSchemaRegistryPassword: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_PASSWORD")
 )
-
-fun getEnvVar(varName: String): String {
-    return System.getenv(varName)
-            ?: throw IllegalArgumentException("Appen kan ikke starte uten av miljøvariabelen $varName er satt.")
-}

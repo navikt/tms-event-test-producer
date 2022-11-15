@@ -5,9 +5,11 @@ import io.confluent.kafka.serializers.KafkaAvroSerializerConfig
 import io.netty.util.NetUtil.getHostname
 import no.nav.brukernotifikasjon.schemas.builders.domain.Eventtype
 import org.apache.kafka.clients.CommonClientConfigs
+import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.config.SaslConfigs
 import org.apache.kafka.common.config.SslConfigs
+import org.apache.kafka.common.serialization.StringSerializer
 import java.net.InetSocketAddress
 import java.util.*
 
@@ -45,4 +47,20 @@ object Kafka {
             }
         }
     }
+
+    fun initializeRapidKafkaProducer(environment: Environment) = KafkaProducer<String, String>(
+        Properties().apply {
+            put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.aivenBrokers)
+            put(
+                ProducerConfig.CLIENT_ID_CONFIG,
+                "tms-event-test-producer"
+            )
+            put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+            put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+            put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 40000)
+            put(ProducerConfig.ACKS_CONFIG, "all")
+            put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true")
+            putAll(credentialPropsAiven(environment.securityConfig.variables!!))
+        }
+    )
 }

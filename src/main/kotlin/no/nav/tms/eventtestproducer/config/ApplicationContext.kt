@@ -13,6 +13,7 @@ import no.nav.tms.eventtestproducer.done.DoneProducer
 import no.nav.tms.eventtestproducer.innboks.InnboksProducer
 import no.nav.tms.eventtestproducer.oppgave.OppgaveProducer
 import no.nav.tms.eventtestproducer.tokenx.EventhandlerTokendings
+import no.nav.tms.eventtestproducer.utkast.UtkastRapidProducer
 import no.nav.tms.token.support.tokendings.exchange.TokendingsServiceBuilder
 import org.apache.kafka.clients.producer.KafkaProducer
 
@@ -40,4 +41,7 @@ class ApplicationContext {
     val doneProducer = DoneProducer(environment, kafkaProducerDone)
 
     val doneEventService = DoneEventService(handlerConsumer, eventhandlerTokendings, doneProducer)
+
+    val kafkaRapidProducer = Kafka.initializeRapidKafkaProducer(environment)
+    val utkastRapidProducer = UtkastRapidProducer(kafkaRapidProducer, environment.utkastTopicName)
 }

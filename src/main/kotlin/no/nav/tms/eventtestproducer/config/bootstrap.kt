@@ -13,6 +13,7 @@ import no.nav.tms.eventtestproducer.common.healthApi
 import no.nav.tms.eventtestproducer.done.doneApi
 import no.nav.tms.eventtestproducer.innboks.innboksApi
 import no.nav.tms.eventtestproducer.oppgave.oppgaveApi
+import no.nav.tms.eventtestproducer.utkast.utkastApi
 import no.nav.tms.token.support.idporten.sidecar.installIdPortenAuth
 import no.nav.tms.token.support.idporten.sidecar.LoginLevel.LEVEL_3
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
@@ -44,6 +45,7 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
                 beskjedApi(appContext.beskjedProducer)
                 innboksApi(appContext.innboksProducer)
                 doneApi(appContext.doneEventService)
+                utkastApi(appContext.utkastRapidProducer)
             }
         }
     }
