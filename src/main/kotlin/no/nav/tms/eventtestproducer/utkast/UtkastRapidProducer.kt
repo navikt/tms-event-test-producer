@@ -19,6 +19,7 @@ class UtkastRapidProducer(
         val objectNode = objectMapper.createObjectNode()
         objectNode.put("@event_name", "created")
         objectNode.put("ident", user.ident)
+        objectNode.put("eventId", utkastCreate.eventId)
         objectNode.put("tittel", utkastCreate.tittel)
         objectNode.put("link", utkastCreate.link)
         val producerRecord = ProducerRecord(topicName, utkastCreate.eventId, objectNode.toString())
@@ -30,6 +31,7 @@ class UtkastRapidProducer(
         val objectNode = objectMapper.createObjectNode()
         objectNode.put("@event_name", "updated")
         objectNode.put("ident", user.ident)
+        objectNode.put("eventId", utkastUpdate.eventId)
         utkastUpdate.tittel?.let { objectNode.put("tittel", it) }
         utkastUpdate.link?.let { objectNode.put("link", it) }
         val producerRecord = ProducerRecord(topicName, utkastUpdate.eventId, objectNode.toString())
@@ -41,6 +43,7 @@ class UtkastRapidProducer(
         val objectNode = objectMapper.createObjectNode()
         objectNode.put("@event_name", "deleted")
         objectNode.put("ident", user.ident)
+        objectNode.put("eventId", eventId)
         val producerRecord = ProducerRecord(topicName, eventId, objectNode.toString())
         kafkaProducer.send(producerRecord)
         log.info("Produsert utkast-deleted på rapid med eventid $eventId")
