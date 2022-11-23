@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UtkastCreate(
-    val eventId: String,
+    val utkastId: String,
     val tittel: String,
     val link: String
 )
@@ -12,7 +12,7 @@ data class UtkastCreate(
 
 @Serializable
 data class UtkastUpdate(
-    val eventId: String,
+    val utkastId: String,
     val tittel: String? = null,
     val link: String? = null
 )
@@ -20,6 +20,6 @@ data class UtkastUpdate(
 
 @Serializable
 data class UtkastDelete(
-    val eventId: String,
+    val utkastId: String
 )
 

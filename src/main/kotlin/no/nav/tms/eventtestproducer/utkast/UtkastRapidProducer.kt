@@ -19,33 +19,33 @@ class UtkastRapidProducer(
         val objectNode = objectMapper.createObjectNode()
         objectNode.put("@event_name", "created")
         objectNode.put("ident", user.ident)
-        objectNode.put("eventId", utkastCreate.eventId)
+        objectNode.put("utkastId", utkastCreate.utkastId)
         objectNode.put("tittel", utkastCreate.tittel)
         objectNode.put("link", utkastCreate.link)
-        val producerRecord = ProducerRecord(topicName, utkastCreate.eventId, objectNode.toString())
+        val producerRecord = ProducerRecord(topicName, utkastCreate.utkastId, objectNode.toString())
         kafkaProducer.send(producerRecord)
-        log.info("Produsert utkast-created på rapid med eventid ${utkastCreate.eventId}")
+        log.info("Produsert utkast-created på rapid med utkastId ${utkastCreate.utkastId}")
     }
 
     fun updateUtkast(user: IdportenUser, utkastUpdate: UtkastUpdate) {
         val objectNode = objectMapper.createObjectNode()
         objectNode.put("@event_name", "updated")
         objectNode.put("ident", user.ident)
-        objectNode.put("eventId", utkastUpdate.eventId)
+        objectNode.put("utkastId", utkastUpdate.utkastId)
         utkastUpdate.tittel?.let { objectNode.put("tittel", it) }
         utkastUpdate.link?.let { objectNode.put("link", it) }
-        val producerRecord = ProducerRecord(topicName, utkastUpdate.eventId, objectNode.toString())
+        val producerRecord = ProducerRecord(topicName, utkastUpdate.utkastId, objectNode.toString())
         kafkaProducer.send(producerRecord)
-        log.info("Produsert utkast-updated på rapid med eventid ${utkastUpdate.eventId}")
+        log.info("Produsert utkast-updated på rapid med utkastId ${utkastUpdate.utkastId}")
     }
 
-    fun deleteUtkast(user: IdportenUser, eventId: String) {
+    fun deleteUtkast(user: IdportenUser, utkastId: String) {
         val objectNode = objectMapper.createObjectNode()
         objectNode.put("@event_name", "deleted")
         objectNode.put("ident", user.ident)
-        objectNode.put("eventId", eventId)
-        val producerRecord = ProducerRecord(topicName, eventId, objectNode.toString())
+        objectNode.put("utkastId", utkastId)
+        val producerRecord = ProducerRecord(topicName, utkastId, objectNode.toString())
         kafkaProducer.send(producerRecord)
-        log.info("Produsert utkast-deleted på rapid med eventid $eventId")
+        log.info("Produsert utkast-deleted på rapid med utkastId $utkastId")
     }
 }
