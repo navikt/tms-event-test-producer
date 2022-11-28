@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 data class UtkastCreate(
     val utkastId: String,
     val tittel: String,
-    val link: String
+    val link: String,
+    val tittelI18n: Map<String, String>? = null
 )
 
 
@@ -14,7 +15,8 @@ data class UtkastCreate(
 data class UtkastUpdate(
     val utkastId: String,
     val tittel: String? = null,
-    val link: String? = null
+    val link: String? = null,
+    val tittelI18n: Map<String, String>? = null
 )
 
 

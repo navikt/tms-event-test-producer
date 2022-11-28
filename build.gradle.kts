@@ -22,6 +22,7 @@ repositories {
 
 dependencies {
     implementation("com.github.navikt:brukernotifikasjon-schemas:2.5.1")
+    implementation("com.github.navikt:tms-utkast:2022-11-28-1215-spraak")
     implementation(DittNAV.Common.utils)
     implementation(DittNAV.Common.logging)
     implementation(Hikari.cp)

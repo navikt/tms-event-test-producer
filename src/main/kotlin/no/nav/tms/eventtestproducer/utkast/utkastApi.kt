@@ -41,7 +41,7 @@ fun Route.utkastApi(producer: UtkastRapidProducer) {
     post("/utkast/delete") {
         val utkastDelete = call.receive<UtkastDelete>()
 
-        producer.deleteUtkast(innloggetBruker, utkastDelete.utkastId)
+        producer.deleteUtkast(utkastDelete.utkastId)
 
         call.respond(HttpStatusCode.OK)
     }
