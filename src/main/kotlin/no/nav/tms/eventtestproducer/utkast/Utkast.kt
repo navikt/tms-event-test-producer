@@ -25,3 +25,10 @@ data class UtkastDelete(
     val utkastId: String
 )
 
+@Serializable
+data class MultiUtkast(
+    val count: Int,
+    val idOffset: Int,
+    val updateTittel: Boolean = false,
+    val languages: List<String> = emptyList()
+)

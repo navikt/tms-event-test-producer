@@ -6,10 +6,11 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import no.nav.personbruker.dittnav.common.util.config.StringEnvVar
 import no.nav.tms.eventtestproducer.config.innloggetBruker
 import java.util.*
 
-fun Route.utkastApi(producer: UtkastRapidProducer) {
+fun Route.utkastApi(producer: UtkastRapidProducer, multiProducer: MultiUtkastProducer) {
     get("/uuid/generate") {
         call.respondText(UUID.randomUUID().toString())
     }
@@ -45,4 +46,31 @@ fun Route.utkastApi(producer: UtkastRapidProducer) {
 
         call.respond(HttpStatusCode.OK)
     }
+
+    if (StringEnvVar.getEnvVar("NAIS_CUSTER") == "dev-gcp") {
+        post("/utkast/multi/create") {
+            val multiCreate = call.receive<MultiUtkast>()
+
+            multiProducer.sendCreate(innloggetBruker.ident, multiCreate)
+
+            call.respond(HttpStatusCode.OK)
+        }
+
+        post("/utkast/multi/update") {
+            val multiUpdate = call.receive<MultiUtkast>()
+
+            multiProducer.sendUpdate(innloggetBruker.ident, multiUpdate)
+
+            call.respond(HttpStatusCode.OK)
+        }
+
+        post("/utkast/multi/delete") {
+            val multiDelete = call.receive<MultiUtkast>()
+
+            multiProducer.sendDelete(multiDelete)
+
+            call.respond(HttpStatusCode.OK)
+        }
+    }
+
 }

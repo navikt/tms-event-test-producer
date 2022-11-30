@@ -45,7 +45,7 @@ fun Application.mainModule(appContext: ApplicationContext = ApplicationContext()
                 beskjedApi(appContext.beskjedProducer)
                 innboksApi(appContext.innboksProducer)
                 doneApi(appContext.doneEventService)
-                utkastApi(appContext.utkastRapidProducer)
+                utkastApi(appContext.utkastRapidProducer, appContext.utkastMultiProducer)
             }
         }
     }
