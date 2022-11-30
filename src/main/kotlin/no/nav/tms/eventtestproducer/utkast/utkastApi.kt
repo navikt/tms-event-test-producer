@@ -47,7 +47,7 @@ fun Route.utkastApi(producer: UtkastRapidProducer, multiProducer: MultiUtkastPro
         call.respond(HttpStatusCode.OK)
     }
 
-    if (StringEnvVar.getEnvVar("NAIS_CUSTER_NAME") == "dev-gcp") {
+    if (StringEnvVar.getEnvVar("NAIS_CLUSTER_NAME") == "dev-gcp") {
         post("/utkast/multi/create") {
             val multiCreate = call.receive<MultiUtkast>()
 
