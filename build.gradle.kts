@@ -39,9 +39,9 @@ dependencies {
     implementation(Logback.classic)
     implementation(Logstash.logbackEncoder)
     implementation(Prometheus.logback)
-    implementation(TmsKtorTokenSupport.idportenSidecar)
+    implementation(TokenSupport201.idportenSidecar)
     implementation(SulkyUlid.sulkyUlid)
-    implementation("com.github.navikt:tms-utkast:20230203100430-ecf5208")
+    implementation(Utkast.builder)
 
     testImplementation(kotlin("test-junit5"))
     testImplementation(Bouncycastle.bcprovJdk15on)

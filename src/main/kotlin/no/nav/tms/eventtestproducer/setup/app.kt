@@ -38,6 +38,8 @@ fun Application.testProducerApi(appContext: ApplicationContext) {
     installIdPortenAuth {
         setAsDefault = true
         loginLevel = LEVEL_3
+        inheritProjectRootPath = false
+        rootPath = appContext.environment.rootPath
     }
 
     install(CORS) {
