@@ -1,9 +1,9 @@
 package no.nav.tms.eventtestproducer.innboks
 
-import io.ktor.routing.Route
-import io.ktor.routing.post
-import no.nav.tms.eventtestproducer.config.innloggetBruker
-import no.nav.tms.eventtestproducer.config.respondForParameterType
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.post
+import no.nav.tms.eventtestproducer.util.innloggetBruker
+import no.nav.tms.eventtestproducer.util.respondForParameterType
 
 fun Route.innboksApi(innboksProducer: InnboksProducer) {
 

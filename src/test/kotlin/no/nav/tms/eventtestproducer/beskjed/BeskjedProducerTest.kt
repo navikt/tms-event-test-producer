@@ -9,9 +9,8 @@ import kotlinx.datetime.plus
 import no.nav.brukernotifikasjon.schemas.builders.domain.PreferertKanal
 import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
-import no.nav.tms.eventtestproducer.common.InnloggetBrukerObjectMother
-import no.nav.tms.eventtestproducer.common.kafka.KafkaProducerWrapper
-import no.nav.tms.eventtestproducer.common.util.createPropertiesForTestEnvironment
+import no.nav.tms.eventtestproducer.setup.KafkaProducerWrapper
+import no.nav.tms.eventtestproducer.util.createPropertiesForTestEnvironment
 import org.amshove.kluent.`should be empty`
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be empty`
@@ -31,7 +30,6 @@ class BeskjedProducerTest {
     private val epostVarslingstekst = "<p>Du har fått en ny beskjed på Ditt NAV</p>"
     private val epostVarslingstittel = "Beskjed"
     private val smsVarslingstekst = "Du har fått en ny beskjed på Ditt NAV"
-    private val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker(fodselsnummer)
     private val environment = createPropertiesForTestEnvironment()
     private val beskjedKafkaProducer = mockk<KafkaProducerWrapper<NokkelInput, BeskjedInput>>()
     private val beskjedProducer = BeskjedProducer(environment, beskjedKafkaProducer)
@@ -40,7 +38,7 @@ class BeskjedProducerTest {
     fun `should create beskjed-event`() {
         runBlocking {
             val beskjedDto = ProduceBeskjedDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, synligFremTil, epostVarslingstekst, epostVarslingstittel, smsVarslingstekst)
-            val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(innloggetBruker, beskjedDto)
+            val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(sikkerhetsnivaa, beskjedDto)
             beskjedKafkaEvent.getTidspunkt().`should not be null`()
             beskjedKafkaEvent.getSynligFremTil().`should not be null`()
             beskjedKafkaEvent.getLink() `should be equal to` link
@@ -58,7 +56,7 @@ class BeskjedProducerTest {
     @Test
     fun `should allow no link value`() {
         val beskjedDto = ProduceBeskjedDto(tekst, null, grupperingsid, eksternVarsling)
-        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(innloggetBruker, beskjedDto)
+        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(sikkerhetsnivaa, beskjedDto)
         beskjedKafkaEvent.getLink() `should be equal to` ""
     }
 
@@ -66,7 +64,7 @@ class BeskjedProducerTest {
     fun `should create beskjed-key`() {
         runBlocking {
             val beskjedDto = ProduceBeskjedDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler)
-            val nokkel = beskjedProducer.createNokkelInput(innloggetBruker, beskjedDto)
+            val nokkel = beskjedProducer.createNokkelInput(fodselsnummer, beskjedDto)
             nokkel.getEventId().`should not be empty`()
             nokkel.getGrupperingsId() `should be equal to` grupperingsid
             nokkel.getFodselsnummer() `should be equal to` fodselsnummer
@@ -78,35 +76,35 @@ class BeskjedProducerTest {
     @Test
     fun `should allow no value for prefererte kanaler`() {
         val beskjedDto = ProduceBeskjedDto(tekst, link, grupperingsid, eksternVarsling)
-        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(innloggetBruker, beskjedDto)
+        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(sikkerhetsnivaa, beskjedDto)
         beskjedKafkaEvent.getPrefererteKanaler().`should be empty`()
     }
 
     @Test
     fun `should allow no synligFremTil value`() {
         val beskjedDto = ProduceBeskjedDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, synligFremTil = null)
-        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(innloggetBruker, beskjedDto)
+        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(sikkerhetsnivaa, beskjedDto)
         beskjedKafkaEvent.getSynligFremTil() `should be equal to` null
     }
 
     @Test
     fun `should allow no epostVarslingstekst value`() {
         val beskjedDto = ProduceBeskjedDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, epostVarslingstekst = null)
-        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(innloggetBruker, beskjedDto)
+        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(sikkerhetsnivaa, beskjedDto)
         beskjedKafkaEvent.getEpostVarslingstekst() `should be equal to` null
     }
 
     @Test
     fun `should allow no epostVarslingstittel value`() {
         val beskjedDto = ProduceBeskjedDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, epostVarslingstittel = null)
-        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(innloggetBruker, beskjedDto)
+        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(sikkerhetsnivaa, beskjedDto)
         beskjedKafkaEvent.getEpostVarslingstittel() `should be equal to` null
     }
 
     @Test
     fun `should allow no smsVarslingstekst value`() {
         val beskjedDto = ProduceBeskjedDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, smsVarslingstekst = null)
-        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(innloggetBruker, beskjedDto)
+        val beskjedKafkaEvent = beskjedProducer.createBeskjedInput(sikkerhetsnivaa, beskjedDto)
         beskjedKafkaEvent.getSmsVarslingstekst() `should be equal to` null
     }
 }

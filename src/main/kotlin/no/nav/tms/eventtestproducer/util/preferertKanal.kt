@@ -1,4 +1,4 @@
-package no.nav.tms.eventtestproducer.common
+package no.nav.tms.eventtestproducer.util
 
 import no.nav.brukernotifikasjon.schemas.builders.domain.PreferertKanal
 
