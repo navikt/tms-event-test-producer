@@ -1,8 +1,8 @@
 package no.nav.tms.eventtestproducer.beskjed
 
-import io.ktor.routing.*
-import no.nav.tms.eventtestproducer.config.innloggetBruker
-import no.nav.tms.eventtestproducer.config.respondForParameterType
+import io.ktor.server.routing.*
+import no.nav.tms.eventtestproducer.util.innloggetBruker
+import no.nav.tms.eventtestproducer.util.respondForParameterType
 
 fun Route.beskjedApi(beskjedProducer: BeskjedProducer) {
 

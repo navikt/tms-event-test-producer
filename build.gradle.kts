@@ -22,30 +22,26 @@ repositories {
 
 dependencies {
     implementation("com.github.navikt:brukernotifikasjon-schemas:2.5.1")
-    implementation("com.github.navikt:tms-utkast:2022-11-28-1215-spraak")
-    implementation(DittNAV.Common.utils)
-    implementation(DittNAV.Common.logging)
+    implementation(DittNAVCommonLib.utils)
     implementation(Hikari.cp)
-    implementation(Kafka.Apache.clients)
-    implementation(Kafka.Confluent.avroSerializer)
-    implementation(Ktor.auth)
-    implementation(Ktor.authJwt)
-    implementation(Ktor.clientApache)
-    implementation(Ktor.clientSerializationJvm)
-    implementation(Ktor.serialization)
+    implementation(Kafka.clients)
+    implementation(Avro.avroSerializer)
+    implementation(Ktor2.Client.apache)
+    implementation(Ktor2.Client.contentNegotiation)
+    implementation(Ktor2.Serialization.kotlinX)
+    implementation(Ktor2.Server.auth)
+    implementation(Ktor2.Server.authJwt)
+    implementation(Ktor2.Server.contentNegotiation)
+    implementation(Ktor2.Server.cors)
+    implementation(Ktor2.Server.defaultHeaders)
+    implementation(Ktor2.Server.netty)
     implementation(Kotlinx.datetime)
-    implementation(Ktor.serverNetty)
     implementation(Logback.classic)
     implementation(Logstash.logbackEncoder)
-    implementation(NAV.tokenValidatorKtor)
-    implementation(NAV.vaultJdbc)
-    implementation(Postgresql.postgresql)
-    implementation(Prometheus.common)
-    implementation(Prometheus.hotspot)
     implementation(Prometheus.logback)
-    implementation(Tms.KtorTokenSupport.tokendingsExchange)
-    implementation(Tms.KtorTokenSupport.idportenSidecar)
-    implementation(ULID.sulkyUlid)
+    implementation(TmsKtorTokenSupport.idportenSidecar)
+    implementation(SulkyUlid.sulkyUlid)
+    implementation("com.github.navikt:tms-utkast:20230203100430-ecf5208")
 
     testImplementation(kotlin("test-junit5"))
     testImplementation(Bouncycastle.bcprovJdk15on)
@@ -55,17 +51,17 @@ dependencies {
     testImplementation(Jjwt.orgjson)
     testImplementation(Junit.api)
     testImplementation(Junit.engine)
-    testImplementation(Kafka.Apache.kafka_2_12)
-    testImplementation(Kafka.Apache.streams)
-    testImplementation(Kafka.Confluent.schemaRegistry)
+    testImplementation(Kafka.kafka_2_12)
+    testImplementation(Kafka.streams)
+    testImplementation(Avro.schemaRegistry)
     testImplementation(Kluent.kluent)
-    testImplementation(Ktor.clientMock)
+    testImplementation(Ktor2.Test.clientMock)
     testImplementation(Mockk.mockk)
     testImplementation(NAV.kafkaEmbedded)
 }
 
 application {
-    mainClass.set("io.ktor.server.netty.EngineMain")
+    mainClass.set("no.nav.tms.eventtestproducer.config.AppKt")
 }
 
 tasks {
@@ -74,17 +70,6 @@ tasks {
         testLogging {
             events("passed", "skipped", "failed")
         }
-    }
-
-    register("runServer", JavaExec::class) {
-        println("Setting default environment variables for running with DittNAV docker-compose")
-        DockerComposeDefaults.environomentVariables.forEach { (name, value) ->
-            println("Setting the environment variable $name")
-            environment(name, value)
-        }
-
-        main = application.mainClass.get()
-        classpath = sourceSets["main"].runtimeClasspath
     }
 }
 

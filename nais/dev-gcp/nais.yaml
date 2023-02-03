@@ -20,24 +20,13 @@ spec:
   replicas:
     min: 1
     max: 1
-  tokenx:
-    enabled: true
   idporten:
     enabled: true
     postLogoutRedirectURIs:
       - "https://www.dev.nav.no"
     sidecar:
       enabled: true
-      level: Level4
-  accessPolicy:
-    inbound:
-      rules:
-        - application: tms-varsel-test
-    outbound:
-      rules:
-        - application: dittnav-event-handler
-          namespace: personbruker
-        - application: dittnav-event-handler
+      level: Level3
   ingresses:
     - "https://person.dev.nav.no/tms-event-test-producer"
   resources:

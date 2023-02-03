@@ -9,9 +9,8 @@ import kotlinx.datetime.plus
 import no.nav.brukernotifikasjon.schemas.builders.domain.PreferertKanal
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
-import no.nav.tms.eventtestproducer.common.InnloggetBrukerObjectMother
-import no.nav.tms.eventtestproducer.common.kafka.KafkaProducerWrapper
-import no.nav.tms.eventtestproducer.common.util.createPropertiesForTestEnvironment
+import no.nav.tms.eventtestproducer.setup.KafkaProducerWrapper
+import no.nav.tms.eventtestproducer.util.createPropertiesForTestEnvironment
 import org.amshove.kluent.`should be empty`
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be empty`
@@ -31,7 +30,6 @@ class OppgaveProducerTest {
     private val epostVarslingstekst = "<p>Du har fått en ny oppgave på Ditt NAV</p>"
     private val epostVarslingstittel = "Oppgave"
     private val smsVarslingstekst = "Du har fått en ny oppgave på Ditt NAV"
-    private val innloggetBruker = InnloggetBrukerObjectMother.createInnloggetBruker(fodselsnummer)
     private val environment = createPropertiesForTestEnvironment()
     private val oppgaveKafkaProducer = mockk<KafkaProducerWrapper<NokkelInput, OppgaveInput>>()
     private val oppgaveProducer = OppgaveProducer(environment, oppgaveKafkaProducer)
@@ -40,7 +38,7 @@ class OppgaveProducerTest {
     fun `should create oppgave-event`() {
         runBlocking {
             val oppgaveDto = ProduceOppgaveDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, synligFremTil, epostVarslingstekst, epostVarslingstittel, smsVarslingstekst)
-            val oppgaveKafkaEvent = oppgaveProducer.createOppgaveInput(innloggetBruker, oppgaveDto)
+            val oppgaveKafkaEvent = oppgaveProducer.createOppgaveInput(sikkerhetsnivaa, oppgaveDto)
             oppgaveKafkaEvent.getTidspunkt().`should not be null`()
             oppgaveKafkaEvent.getLink() `should be equal to` link
             oppgaveKafkaEvent.getTekst() `should be equal to` tekst
@@ -58,7 +56,7 @@ class OppgaveProducerTest {
     fun `should create oppgave-key`() {
         runBlocking {
             val oppgaveDto = ProduceOppgaveDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler)
-            val nokkel = oppgaveProducer.createNokkelInput(innloggetBruker, oppgaveDto)
+            val nokkel = oppgaveProducer.createNokkelInput(fodselsnummer, oppgaveDto)
             nokkel.getEventId().`should not be empty`()
             nokkel.getGrupperingsId() `should be equal to` grupperingsid
             nokkel.getFodselsnummer() `should be equal to` fodselsnummer
@@ -70,7 +68,7 @@ class OppgaveProducerTest {
     @Test
     fun `should allow no value for prefererte kanaler`() {
         val oppgaveDto = ProduceOppgaveDto(tekst, link, grupperingsid, eksternVarsling)
-        val oppgaveKafkaEvent = oppgaveProducer.createOppgaveInput(innloggetBruker, oppgaveDto)
+        val oppgaveKafkaEvent = oppgaveProducer.createOppgaveInput(sikkerhetsnivaa, oppgaveDto)
         oppgaveKafkaEvent.getPrefererteKanaler().`should be empty`()
     }
 
@@ -78,28 +76,28 @@ class OppgaveProducerTest {
     @Test
     fun `should allow no synligFremTil value`() {
         val oppgaveDto = ProduceOppgaveDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, synligFremTil = null)
-        val oppgaveKafkaEvent = oppgaveProducer.createOppgaveInput(innloggetBruker, oppgaveDto)
+        val oppgaveKafkaEvent = oppgaveProducer.createOppgaveInput(sikkerhetsnivaa, oppgaveDto)
         oppgaveKafkaEvent.getSynligFremTil() `should be equal to` null
     }
 
     @Test
     fun `should allow no epostVarslingstekst value`() {
         val oppgaveDto = ProduceOppgaveDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, epostVarslingstekst = null)
-        val oppgaveKafkaEvent = oppgaveProducer.createOppgaveInput(innloggetBruker, oppgaveDto)
+        val oppgaveKafkaEvent = oppgaveProducer.createOppgaveInput(sikkerhetsnivaa, oppgaveDto)
         oppgaveKafkaEvent.getEpostVarslingstekst() `should be equal to` null
     }
 
     @Test
     fun `should allow no epostVarslingstittel value`() {
         val oppgaveDto = ProduceOppgaveDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, epostVarslingstittel = null)
-        val oppgaveKafkaEvent = oppgaveProducer.createOppgaveInput(innloggetBruker, oppgaveDto)
+        val oppgaveKafkaEvent = oppgaveProducer.createOppgaveInput(sikkerhetsnivaa, oppgaveDto)
         oppgaveKafkaEvent.getEpostVarslingstittel() `should be equal to` null
     }
 
     @Test
     fun `should allow no smsVarslingstekst value`() {
         val oppgaveDto = ProduceOppgaveDto(tekst, link, grupperingsid, eksternVarsling, prefererteKanaler, smsVarslingstekst = null)
-        val beskjedKafkaEvent = oppgaveProducer.createOppgaveInput(innloggetBruker, oppgaveDto)
+        val beskjedKafkaEvent = oppgaveProducer.createOppgaveInput(sikkerhetsnivaa, oppgaveDto)
         beskjedKafkaEvent.getSmsVarslingstekst() `should be equal to` null
     }
 }

@@ -4,9 +4,9 @@ import no.nav.brukernotifikasjon.schemas.builders.InnboksInputBuilder
 import no.nav.brukernotifikasjon.schemas.builders.NokkelInputBuilder
 import no.nav.brukernotifikasjon.schemas.input.InnboksInput
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
-import no.nav.tms.eventtestproducer.common.getPrefererteKanaler
-import no.nav.tms.eventtestproducer.common.kafka.KafkaProducerWrapper
-import no.nav.tms.eventtestproducer.config.Environment
+import no.nav.tms.eventtestproducer.util.getPrefererteKanaler
+import no.nav.tms.eventtestproducer.setup.Environment
+import no.nav.tms.eventtestproducer.setup.KafkaProducerWrapper
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import org.slf4j.LoggerFactory
 import java.net.URL
@@ -20,8 +20,8 @@ class InnboksProducer(private val environment: Environment, private val innboksK
 
     fun produceInnboksEventForIdent(innloggetBruker: IdportenUser, dto: ProduceInnboksDto) {
         try {
-            val key = createNokkelInput(innloggetBruker, dto)
-            val event = createInnboksInput(innloggetBruker, dto)
+            val key = createNokkelInput(innloggetBruker.ident, dto)
+            val event = createInnboksInput(innloggetBruker.loginLevel, dto)
             sendEventToKafka(key, event)
         } catch (e: Exception) {
             log.error("Det skjedde en feil ved produsering av et event for brukeren $innloggetBruker", e)
@@ -32,23 +32,23 @@ class InnboksProducer(private val environment: Environment, private val innboksK
         innboksKafkaProducer.sendEvent(key, event)
     }
 
-    fun createNokkelInput(innloggetBruker: IdportenUser, dto: ProduceInnboksDto): NokkelInput {
+    fun createNokkelInput(ident: String, dto: ProduceInnboksDto): NokkelInput {
         return NokkelInputBuilder()
             .withEventId(UUID.randomUUID().toString())
             .withGrupperingsId(dto.grupperingsid)
-            .withFodselsnummer(innloggetBruker.ident)
+            .withFodselsnummer(ident)
             .withNamespace(environment.namespace)
             .withAppnavn(environment.appnavn)
             .build()
     }
 
-    fun createInnboksInput(innloggetBruker: IdportenUser, dto: ProduceInnboksDto): InnboksInput {
+    fun createInnboksInput(loginLevel: Int, dto: ProduceInnboksDto): InnboksInput {
         val nowInMs = LocalDateTime.now(ZoneOffset.UTC)
         val builder = InnboksInputBuilder()
             .withTidspunkt(nowInMs)
             .withTekst(dto.tekst)
             .withLink(URL(dto.link))
-            .withSikkerhetsnivaa(innloggetBruker.loginLevel)
+            .withSikkerhetsnivaa(loginLevel)
             .withEksternVarsling(dto.eksternVarsling)
             .withEpostVarslingstekst(dto.epostVarslingstekst)
             .withEpostVarslingstittel(dto.epostVarslingstittel)

@@ -7,15 +7,14 @@ import no.nav.brukernotifikasjon.schemas.builders.NokkelInputBuilder
 import no.nav.brukernotifikasjon.schemas.builders.OppgaveInputBuilder
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
-import no.nav.tms.eventtestproducer.common.getPrefererteKanaler
-import no.nav.tms.eventtestproducer.common.kafka.KafkaProducerWrapper
-import no.nav.tms.eventtestproducer.config.Environment
+import no.nav.tms.eventtestproducer.util.getPrefererteKanaler
+import no.nav.tms.eventtestproducer.setup.Environment
+import no.nav.tms.eventtestproducer.setup.KafkaProducerWrapper
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import org.slf4j.LoggerFactory
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 class OppgaveProducer(private val environment: Environment, private val oppgaveKafkaProducer: KafkaProducerWrapper<NokkelInput, OppgaveInput>) {
@@ -24,8 +23,8 @@ class OppgaveProducer(private val environment: Environment, private val oppgaveK
 
     fun produceOppgaveEventForIdent(innloggetBruker: IdportenUser, dto: ProduceOppgaveDto) {
         try {
-            val key = createNokkelInput(innloggetBruker, dto)
-            val event = createOppgaveInput(innloggetBruker, dto)
+            val key = createNokkelInput(innloggetBruker.ident, dto)
+            val event = createOppgaveInput(innloggetBruker.loginLevel, dto)
             sendEventToKafka(key, event)
         } catch (e: Exception) {
             log.error("Det skjedde en feil ved produsering av et event for brukeren $innloggetBruker", e)
@@ -36,24 +35,24 @@ class OppgaveProducer(private val environment: Environment, private val oppgaveK
         oppgaveKafkaProducer.sendEvent(key, event)
     }
 
-    fun createNokkelInput(innloggetBruker: IdportenUser, dto: ProduceOppgaveDto): NokkelInput {
+    fun createNokkelInput(ident: String, dto: ProduceOppgaveDto): NokkelInput {
         return NokkelInputBuilder()
             .withEventId(UUID.randomUUID().toString())
             .withGrupperingsId(dto.grupperingsid)
-            .withFodselsnummer(innloggetBruker.ident)
+            .withFodselsnummer(ident)
             .withNamespace(environment.namespace)
             .withAppnavn(environment.appnavn)
             .build()
     }
 
-    fun createOppgaveInput(innloggetBruker: IdportenUser, dto: ProduceOppgaveDto): OppgaveInput {
+    fun createOppgaveInput(loginLevel: Int, dto: ProduceOppgaveDto): OppgaveInput {
         val now = LocalDateTime.now(ZoneOffset.UTC)
         val builder = OppgaveInputBuilder()
             .withTidspunkt(now)
             .withSynligFremTil(dto.synligFremTil?.toLocalDateTime(TimeZone.UTC)?.toJavaLocalDateTime())
             .withTekst(dto.tekst)
             .withLink(URL(dto.link))
-            .withSikkerhetsnivaa(innloggetBruker.loginLevel)
+            .withSikkerhetsnivaa(loginLevel)
             .withEksternVarsling(dto.eksternVarsling)
             .withEpostVarslingstekst(dto.epostVarslingstekst)
             .withEpostVarslingstittel(dto.epostVarslingstittel)
