@@ -61,7 +61,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("no.nav.tms.eventtestproducer.config.AppKt")
+    mainClass.set("no.nav.tms.eventtestproducer.setup.AppKt")
 }
 
 tasks {
