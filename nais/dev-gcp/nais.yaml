@@ -28,7 +28,7 @@ spec:
       enabled: true
       level: Level3
   ingresses:
-    - "https://person.dev.nav.no/tms-event-test-producer"
+    - "https://www.intern.dev.nav.no/tms-event-test-producer"
   resources:
     limits:
       cpu: 1000m
