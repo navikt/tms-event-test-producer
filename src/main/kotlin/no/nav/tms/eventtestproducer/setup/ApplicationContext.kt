@@ -4,6 +4,7 @@ import no.nav.brukernotifikasjon.schemas.builders.domain.Eventtype
 import no.nav.brukernotifikasjon.schemas.input.*
 import no.nav.tms.eventtestproducer.beskjed.BeskjedProducer
 import no.nav.tms.eventtestproducer.innboks.InnboksProducer
+import no.nav.tms.eventtestproducer.microfrontend.MicrofrontendProducer
 import no.nav.tms.eventtestproducer.oppgave.OppgaveProducer
 import no.nav.tms.eventtestproducer.setup.Kafka.initializeRapidKafkaProducer
 import no.nav.tms.eventtestproducer.setup.Kafka.producerProps
@@ -27,4 +28,8 @@ class ApplicationContext {
     val kafkaRapidProducer = initializeRapidKafkaProducer(environment)
     val utkastRapidProducer = UtkastRapidProducer(kafkaRapidProducer, environment.utkastTopicName)
     val utkastMultiProducer = MultiUtkastProducer(kafkaRapidProducer, environment.utkastTopicName)
+
+    val microfrontendKafkaProducer = initializeRapidKafkaProducer(environment)
+
+    val microfrontendProducer = MicrofrontendProducer(microfrontendKafkaProducer)
 }
