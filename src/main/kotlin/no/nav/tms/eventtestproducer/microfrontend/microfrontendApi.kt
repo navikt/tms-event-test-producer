@@ -15,11 +15,11 @@ import org.intellij.lang.annotations.Language
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-private val knowIds = listOf("mk1","mk2","mk3","mk4")
+private val knowIds = listOf("mk1", "mk2", "mk3", "mk4")
 
 private val PipelineContext<Unit, ApplicationCall>.microfrontendId: String
-    get() = call.parameters["microfrontendId"]?.also {id ->
-       if (knowIds.none { it == id }) throw IllegalArgumentException("Ukjent microfrontendId")
+    get() = call.parameters["microfrontendId"]?.also { id ->
+        if (knowIds.none { it == id }) throw IllegalArgumentException("Ukjent microfrontendId")
     } ?: throw IllegalArgumentException("microfrontendId mangler i path")
 
 fun Route.microfrontedApi(microfrontendProducer: MicrofrontendProducer) {
@@ -27,12 +27,24 @@ fun Route.microfrontedApi(microfrontendProducer: MicrofrontendProducer) {
     route("microfrontend/{microfrontendId}") {
 
         post("enable") {
-            microfrontendProducer.produceEnable(innloggetBruker.ident, microfrontendId)
+            val transform = when(call.request.queryParameters["version"]){
+                "1" -> ::v1Enable
+                "2" -> ::v2Enable
+                else -> ::v3Enable
+            }
+
+            microfrontendProducer.produceEnable(innloggetBruker.ident, microfrontendId, transform)
             call.respond(HttpStatusCode.OK)
         }
 
         post("disable") {
-            microfrontendProducer.produceDisable(innloggetBruker.ident, microfrontendId)
+            val transform = when(call.request.queryParameters["version"]){
+                "1" -> ::v1Disable
+                "2" -> ::v2Disable
+                else -> ::v3Disable
+            }
+
+            microfrontendProducer.produceDisable(innloggetBruker.ident, microfrontendId, transform)
             call.respond(HttpStatusCode.OK)
         }
     }
@@ -45,19 +57,22 @@ class MicrofrontendProducer(
     private val log: Logger = LoggerFactory.getLogger(Producer::class.java)
     private val topicName: String = "min-side.aapen-microfrontend-v1"
 
-    fun produceEnable(ident: String, microfrontendId: String) {
+    fun produceEnable(ident: String, microfrontendId: String, transform: (String, String) -> String) {
 
-        kafkaProducer.send(ProducerRecord(topicName, "$microfrontendId$ident",v3Enable(ident, microfrontendId)))
+        kafkaProducer.send(ProducerRecord(topicName, "$microfrontendId$ident", transform(ident, microfrontendId)))
         log.info("Produsert microfrontend-enable på topic med microfrontendId$ident")
     }
 
-    fun produceDisable(ident: String, microfrontendId: String) {
-        kafkaProducer.send(ProducerRecord(topicName, v3Disable(ident, microfrontendId)))
+    fun produceDisable(ident: String, microfrontendId: String, transform:(String,String)->String) {
+        kafkaProducer.send(ProducerRecord(topicName, transform(ident, microfrontendId)))
         log.info("Produsert microfrontend-disable på topic med microfrontendId$ident")
     }
 
-    @Language("JSON")
-    private fun v3Enable(ident: String, microfrontendId: String) = """
+}
+
+
+@Language("JSON")
+fun v3Enable(ident: String, microfrontendId: String) = """
         {
         "@action":"enable",
         "ident": "$ident",
@@ -67,8 +82,27 @@ class MicrofrontendProducer(
         }
     """.trimIndent()
 
-    @Language("JSON")
-    private fun v3Disable(ident: String, microfrontendId: String) = """
+@Language("JSON")
+fun v2Enable(ident: String, microfrontendId: String) = """
+        {
+        "@action":"enable",
+        "ident": "$ident",
+        "microfrontend_id":"$microfrontendId",
+        "sikkerhetsnivå": 4,
+        "initiated_by":"minside-testproducer"
+        }
+    """.trimIndent()
+
+fun v1Enable(ident: String, microfrontendId: String) = """
+        {
+        "@action":"enable",
+        "ident": "$ident",
+        "microfrontend_id":"$microfrontendId"
+        }
+    """.trimIndent()
+
+@Language("JSON")
+fun v3Disable(ident: String, microfrontendId: String) = """
         {
         "@action":"disable",
         "ident": "$ident",
@@ -77,5 +111,21 @@ class MicrofrontendProducer(
         }
     """.trimIndent()
 
+@Language("JSON")
+fun v2Disable(ident: String, microfrontendId: String) = """
+        {
+        "@action":"disable",
+        "ident": "$ident",
+        "microfrontend_id":"$microfrontendId",
+        "initiated_by":"minside-testproducer"
+        }
+    """.trimIndent()
 
-}
+@Language("JSON")
+fun v1Disable(ident: String, microfrontendId: String) = """
+        {
+        "@action":"disable",
+        "ident": "$ident",
+        "microfrontend_id":"$microfrontendId"
+        }
+    """.trimIndent()
