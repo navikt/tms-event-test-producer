@@ -46,7 +46,8 @@ class MicrofrontendProducer(
     private val topicName: String = "min-side.aapen-microfrontend-v1"
 
     fun produceEnable(ident: String, microfrontendId: String) {
-        kafkaProducer.send(ProducerRecord(topicName, v3Enable(ident, microfrontendId)))
+
+        kafkaProducer.send(ProducerRecord(topicName, "$microfrontendId$ident",v3Enable(ident, microfrontendId)))
         log.info("Produsert microfrontend-enable på topic med microfrontendId$ident")
     }
 
@@ -55,22 +56,25 @@ class MicrofrontendProducer(
         log.info("Produsert microfrontend-disable på topic med microfrontendId$ident")
     }
 
-
     @Language("JSON")
     private fun v3Enable(ident: String, microfrontendId: String) = """
+        {
         "@action":"enable",
-        "ident: "$ident",
+        "ident": "$ident",
         "microfrontend_id":"$microfrontendId",
         "sensitivitet": "high",
         "@initiated_by":"minside-testproducer"
+        }
     """.trimIndent()
 
     @Language("JSON")
     private fun v3Disable(ident: String, microfrontendId: String) = """
+        {
         "@action":"disable",
-        "ident: "$ident",
+        "ident": "$ident",
         "microfrontend_id":"$microfrontendId",
         "@initiated_by":"minside-testproducer"
+        }
     """.trimIndent()
 
 

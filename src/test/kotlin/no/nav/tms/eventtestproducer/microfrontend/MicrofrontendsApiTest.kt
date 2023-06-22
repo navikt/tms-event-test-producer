@@ -16,6 +16,7 @@ import io.mockk.verify
 import no.nav.tms.token.support.idporten.sidecar.mock.SecurityLevel
 import no.nav.tms.token.support.idporten.sidecar.mock.installIdPortenAuthMock
 import org.amshove.kluent.shouldBe
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import org.junit.platform.commons.logging.LoggerFactory
 
@@ -28,7 +29,6 @@ class MicrofrontendsApiTest {
     fun testPostMicrofrontendDisable() = testApplication {
         setupMicrofrontendApi()
 
-        ///(authenticate "default")/microfrontend/{microfrontendId}
         client.post("/microfrontend/mk1/disable").apply {
             status shouldBe HttpStatusCode.OK
         }
@@ -77,4 +77,3 @@ class MicrofrontendsApiTest {
 
 
 private fun allRoutes(root: Route): List<Route> = listOf(root) + root.children.flatMap { allRoutes(it) }
-
