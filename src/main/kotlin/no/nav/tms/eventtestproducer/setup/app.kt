@@ -13,6 +13,7 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 import no.nav.tms.eventtestproducer.beskjed.beskjedApi
 import no.nav.tms.eventtestproducer.innboks.innboksApi
+import no.nav.tms.eventtestproducer.microfrontend.microfrontedApi
 import no.nav.tms.eventtestproducer.oppgave.oppgaveApi
 import no.nav.tms.eventtestproducer.utkast.utkastApi
 import no.nav.tms.token.support.idporten.sidecar.installIdPortenAuth
@@ -57,6 +58,7 @@ fun Application.testProducerApi(appContext: ApplicationContext) {
                     beskjedApi(appContext.beskjedProducer)
                     innboksApi(appContext.innboksProducer)
                     utkastApi(appContext.utkastRapidProducer, appContext.utkastMultiProducer)
+                    microfrontedApi(appContext.microfrontendProducer)
                 }
             }
         }

@@ -100,4 +100,5 @@ class OppgaveProducerTest {
         val beskjedKafkaEvent = oppgaveProducer.createOppgaveInput(sikkerhetsnivaa, oppgaveDto)
         beskjedKafkaEvent.getSmsVarslingstekst() `should be equal to` null
     }
+
 }

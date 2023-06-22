@@ -58,6 +58,9 @@ dependencies {
     testImplementation(Ktor2.Test.clientMock)
     testImplementation(Mockk.mockk)
     testImplementation(NAV.kafkaEmbedded)
+    testImplementation(Ktor2.Test.serverTestHost)
+    testImplementation(TmsKtorTokenSupport.idportenSidecarMock)
+    testImplementation(Ktor2.Serialization.jackson)
 }
 
 application {
