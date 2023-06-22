@@ -19,7 +19,7 @@ import org.amshove.kluent.shouldBe
 import org.junit.jupiter.api.Test
 import org.junit.platform.commons.logging.LoggerFactory
 
-class MicrofrontensApiTest {
+class MicrofrontendsApiTest {
 
     private val testLogger = LoggerFactory.getLogger(MicrofrontendProducer::class.java)
     private val producer = mockk<MicrofrontendProducer>(relaxed = true)

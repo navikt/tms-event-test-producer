@@ -11,6 +11,7 @@ import io.ktor.util.pipeline.PipelineContext
 import no.nav.tms.eventtestproducer.util.innloggetBruker
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.intellij.lang.annotations.Language
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -55,18 +56,20 @@ class MicrofrontendProducer(
     }
 
 
+    @Language("JSON")
     private fun v3Enable(ident: String, microfrontendId: String) = """
         "@action":"enable",
         "ident: "$ident",
-        "microfrontend_id":"$microfrontendId"
+        "microfrontend_id":"$microfrontendId",
         "sensitivitet": "high",
         "@initiated_by":"minside-testproducer"
     """.trimIndent()
 
+    @Language("JSON")
     private fun v3Disable(ident: String, microfrontendId: String) = """
         "@action":"disable",
         "ident: "$ident",
-        "microfrontend_id":"$microfrontendId"
+        "microfrontend_id":"$microfrontendId",
         "@initiated_by":"minside-testproducer"
     """.trimIndent()
 
