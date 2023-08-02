@@ -22,11 +22,11 @@ spec:
     max: 1
   idporten:
     enabled: true
-    postLogoutRedirectURIs:
-      - "https://www.dev.nav.no"
     sidecar:
       enabled: true
       level: Level3
+  ingresses:
+    - "https://www.intern.nav.no/tms-event-test-producer"
   resources:
     limits:
       cpu: 1000m
