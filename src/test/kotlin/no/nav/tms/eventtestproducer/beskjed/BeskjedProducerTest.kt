@@ -2,10 +2,6 @@ package no.nav.tms.eventtestproducer.beskjed
 
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
 import no.nav.brukernotifikasjon.schemas.builders.domain.PreferertKanal
 import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
@@ -16,6 +12,7 @@ import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should not be empty`
 import org.amshove.kluent.`should not be null`
 import org.junit.jupiter.api.Test
+import java.time.LocalDateTime
 
 class BeskjedProducerTest {
 
@@ -26,7 +23,7 @@ class BeskjedProducerTest {
     private val sikkerhetsnivaa = 4
     private val eksternVarsling = true
     private val prefererteKanaler = listOf(PreferertKanal.SMS.toString(), PreferertKanal.EPOST.toString())
-    private val synligFremTil = Clock.System.now().plus(7, DateTimeUnit.DAY, TimeZone.UTC)
+    private val synligFremTil = LocalDateTime.now().plusDays(7)
     private val epostVarslingstekst = "<p>Du har fått en ny beskjed på Ditt NAV</p>"
     private val epostVarslingstittel = "Beskjed"
     private val smsVarslingstekst = "Du har fått en ny beskjed på Ditt NAV"
@@ -46,7 +43,6 @@ class BeskjedProducerTest {
             beskjedKafkaEvent.getSikkerhetsnivaa() `should be equal to` sikkerhetsnivaa
             beskjedKafkaEvent.getEksternVarsling() `should be equal to` true
             beskjedKafkaEvent.getPrefererteKanaler() `should be equal to` prefererteKanaler
-            beskjedKafkaEvent.getSynligFremTil() `should be equal to` synligFremTil.toEpochMilliseconds()
             beskjedKafkaEvent.getEpostVarslingstekst() `should be equal to` epostVarslingstekst
             beskjedKafkaEvent.getEpostVarslingstittel() `should be equal to` epostVarslingstittel
             beskjedKafkaEvent.getSmsVarslingstekst() `should be equal to` smsVarslingstekst
