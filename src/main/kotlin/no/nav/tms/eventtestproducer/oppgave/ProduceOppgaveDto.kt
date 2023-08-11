@@ -1,15 +1,14 @@
 package no.nav.tms.eventtestproducer.oppgave
 
-import kotlinx.datetime.Instant
-import kotlinx.serialization.Serializable
+import java.time.Instant
+import java.time.LocalDateTime
 
-@Serializable
 class ProduceOppgaveDto(val tekst: String,
                         val link: String,
                         val grupperingsid: String,
                         val eksternVarsling: Boolean = false,
                         val prefererteKanaler: List<String> = emptyList(),
-                        val synligFremTil: Instant? = null,
+                        val synligFremTil: LocalDateTime? = null,
                         val epostVarslingstekst: String? = null,
                         val epostVarslingstittel: String? = null,
                         val smsVarslingstekst: String? = null) {

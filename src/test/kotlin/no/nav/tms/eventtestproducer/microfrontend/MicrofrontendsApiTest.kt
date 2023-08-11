@@ -15,7 +15,7 @@ import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.tms.token.support.idporten.sidecar.mock.SecurityLevel
+import no.nav.tms.token.support.idporten.sidecar.mock.LevelOfAssurance
 import no.nav.tms.token.support.idporten.sidecar.mock.installIdPortenAuthMock
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
@@ -128,7 +128,7 @@ class MicrofrontendsApiTest {
     fun ApplicationTestBuilder.setupMicrofrontendApi() = application {
         installIdPortenAuthMock {
             setAsDefault = true
-            staticSecurityLevel = SecurityLevel.LEVEL_4
+            staticLevelOfAssurance = LevelOfAssurance.LEVEL_4
             alwaysAuthenticated = true
             staticUserPid = "12345678910"
         }

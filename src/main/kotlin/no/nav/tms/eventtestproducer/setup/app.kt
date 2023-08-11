@@ -1,7 +1,9 @@
 package no.nav.tms.eventtestproducer.setup
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.engine.*
@@ -10,37 +12,47 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.json.Json
 import no.nav.tms.eventtestproducer.beskjed.beskjedApi
 import no.nav.tms.eventtestproducer.innboks.innboksApi
 import no.nav.tms.eventtestproducer.microfrontend.microfrontedApi
 import no.nav.tms.eventtestproducer.oppgave.oppgaveApi
 import no.nav.tms.eventtestproducer.utkast.utkastApi
+import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance.SUBSTANTIAL
 import no.nav.tms.token.support.idporten.sidecar.installIdPortenAuth
-import no.nav.tms.token.support.idporten.sidecar.LoginLevel.LEVEL_3
+import java.text.DateFormat
 
 fun main() {
     val appContext = ApplicationContext()
 
-    embeddedServer(Netty, port = appContext.environment.port) {
-        testProducerApi(appContext)
-    }.start(wait = true)
+    embeddedServer(
+        factory = Netty,
+        environment = applicationEngineEnvironment {
+            rootPath = "tms-event-test-producer"
+
+            module {
+                testProducerApi(appContext)
+            }
+            connector {
+                port = 8080
+            }
+        }
+    ).start(wait = true)
 }
 
 fun Application.testProducerApi(appContext: ApplicationContext) {
     install(DefaultHeaders)
 
     install(ContentNegotiation) {
-        json(Json {
-            ignoreUnknownKeys = true
-        })
+        jackson {
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            registerModule(JavaTimeModule())
+            dateFormat = DateFormat.getDateTimeInstance()
+        }
     }
 
     installIdPortenAuth {
         setAsDefault = true
-        loginLevel = LEVEL_3
-        inheritProjectRootPath = false
-        rootPath = appContext.environment.rootPath
+        levelOfAssurance = SUBSTANTIAL
     }
 
     install(CORS) {
@@ -50,16 +62,14 @@ fun Application.testProducerApi(appContext: ApplicationContext) {
     }
 
     routing {
-        route("/tms-event-test-producer") {
-            healthApi()
-            authenticate {
-                if(appContext.environment.enableApi) {
-                    oppgaveApi(appContext.oppgaveProducer)
-                    beskjedApi(appContext.beskjedProducer)
-                    innboksApi(appContext.innboksProducer)
-                    utkastApi(appContext.utkastRapidProducer, appContext.utkastMultiProducer)
-                    microfrontedApi(appContext.microfrontendProducer)
-                }
+        healthApi()
+        authenticate {
+            if(appContext.environment.enableApi) {
+                oppgaveApi(appContext.oppgaveProducer)
+                beskjedApi(appContext.beskjedProducer)
+                innboksApi(appContext.innboksProducer)
+                utkastApi(appContext.utkastRapidProducer, appContext.utkastMultiProducer)
+                microfrontedApi(appContext.microfrontendProducer)
             }
         }
     }

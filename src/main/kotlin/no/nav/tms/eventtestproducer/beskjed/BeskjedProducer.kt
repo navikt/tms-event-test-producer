@@ -1,8 +1,5 @@
 package no.nav.tms.eventtestproducer.beskjed
 
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toJavaLocalDateTime
-import kotlinx.datetime.toLocalDateTime
 import no.nav.brukernotifikasjon.schemas.builders.BeskjedInputBuilder
 import no.nav.brukernotifikasjon.schemas.builders.NokkelInputBuilder
 import no.nav.brukernotifikasjon.schemas.input.BeskjedInput
@@ -10,6 +7,7 @@ import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.tms.eventtestproducer.util.getPrefererteKanaler
 import no.nav.tms.eventtestproducer.setup.Environment
 import no.nav.tms.eventtestproducer.setup.KafkaProducerWrapper
+import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import org.slf4j.LoggerFactory
 import java.net.URL
@@ -24,7 +22,7 @@ class BeskjedProducer(private val environment: Environment, private val beskjedK
     fun produceBeskjedEventForIdent(innloggetBruker: IdportenUser, dto: ProduceBeskjedDto) {
         try {
             val key = createNokkelInput(innloggetBruker.ident, dto)
-            val event = createBeskjedInput(innloggetBruker.loginLevel, dto)
+            val event = createBeskjedInput(toLegacyLoginLevel(innloggetBruker.levelOfAssurance), dto)
             sendEventToKafka(key, event)
         } catch (e: Exception) {
             log.error("Det skjedde en feil ved produsering av et event for brukeren $innloggetBruker", e)
@@ -51,7 +49,7 @@ class BeskjedProducer(private val environment: Environment, private val beskjedK
                 .withTidspunkt(now)
                 .withTekst(dto.tekst)
                 .withSikkerhetsnivaa(loginLevel)
-                .withSynligFremTil(dto.synligFremTil?.toLocalDateTime(TimeZone.UTC)?.toJavaLocalDateTime())
+                .withSynligFremTil(dto.synligFremTil)
                 .withEksternVarsling(dto.eksternVarsling)
                 .withEpostVarslingstekst(dto.epostVarslingstekst)
                 .withEpostVarslingstittel(dto.epostVarslingstittel)
@@ -61,5 +59,10 @@ class BeskjedProducer(private val environment: Environment, private val beskjedK
             builder.withLink(URL(dto.link))
         }
         return builder.build()
+    }
+
+    private fun toLegacyLoginLevel(loa: LevelOfAssurance) = when(loa) {
+        LevelOfAssurance.SUBSTANTIAL -> 3
+        LevelOfAssurance.HIGH -> 4
     }
 }

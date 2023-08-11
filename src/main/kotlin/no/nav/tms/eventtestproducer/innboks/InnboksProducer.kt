@@ -7,6 +7,7 @@ import no.nav.brukernotifikasjon.schemas.input.NokkelInput
 import no.nav.tms.eventtestproducer.util.getPrefererteKanaler
 import no.nav.tms.eventtestproducer.setup.Environment
 import no.nav.tms.eventtestproducer.setup.KafkaProducerWrapper
+import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import org.slf4j.LoggerFactory
 import java.net.URL
@@ -21,7 +22,7 @@ class InnboksProducer(private val environment: Environment, private val innboksK
     fun produceInnboksEventForIdent(innloggetBruker: IdportenUser, dto: ProduceInnboksDto) {
         try {
             val key = createNokkelInput(innloggetBruker.ident, dto)
-            val event = createInnboksInput(innloggetBruker.loginLevel, dto)
+            val event = createInnboksInput(toLegacyLoginLevel(innloggetBruker.levelOfAssurance), dto)
             sendEventToKafka(key, event)
         } catch (e: Exception) {
             log.error("Det skjedde en feil ved produsering av et event for brukeren $innloggetBruker", e)
@@ -55,5 +56,10 @@ class InnboksProducer(private val environment: Environment, private val innboksK
             .withSmsVarslingstekst(dto.smsVarslingstekst)
             .withPrefererteKanaler(*getPrefererteKanaler(dto.prefererteKanaler).toTypedArray())
         return builder.build()
+    }
+
+    private fun toLegacyLoginLevel(loa: LevelOfAssurance) = when(loa) {
+        LevelOfAssurance.SUBSTANTIAL -> 3
+        LevelOfAssurance.HIGH -> 4
     }
 }

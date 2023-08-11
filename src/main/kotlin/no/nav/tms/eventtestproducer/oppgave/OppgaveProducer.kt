@@ -1,8 +1,5 @@
 package no.nav.tms.eventtestproducer.oppgave
 
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toJavaLocalDateTime
-import kotlinx.datetime.toLocalDateTime
 import no.nav.brukernotifikasjon.schemas.builders.NokkelInputBuilder
 import no.nav.brukernotifikasjon.schemas.builders.OppgaveInputBuilder
 import no.nav.brukernotifikasjon.schemas.input.NokkelInput
@@ -10,6 +7,7 @@ import no.nav.brukernotifikasjon.schemas.input.OppgaveInput
 import no.nav.tms.eventtestproducer.util.getPrefererteKanaler
 import no.nav.tms.eventtestproducer.setup.Environment
 import no.nav.tms.eventtestproducer.setup.KafkaProducerWrapper
+import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import org.slf4j.LoggerFactory
 import java.net.URL
@@ -24,7 +22,7 @@ class OppgaveProducer(private val environment: Environment, private val oppgaveK
     fun produceOppgaveEventForIdent(innloggetBruker: IdportenUser, dto: ProduceOppgaveDto) {
         try {
             val key = createNokkelInput(innloggetBruker.ident, dto)
-            val event = createOppgaveInput(innloggetBruker.loginLevel, dto)
+            val event = createOppgaveInput(toLegacyLoginLevel(innloggetBruker.levelOfAssurance), dto)
             sendEventToKafka(key, event)
         } catch (e: Exception) {
             log.error("Det skjedde en feil ved produsering av et event for brukeren $innloggetBruker", e)
@@ -49,7 +47,7 @@ class OppgaveProducer(private val environment: Environment, private val oppgaveK
         val now = LocalDateTime.now(ZoneOffset.UTC)
         val builder = OppgaveInputBuilder()
             .withTidspunkt(now)
-            .withSynligFremTil(dto.synligFremTil?.toLocalDateTime(TimeZone.UTC)?.toJavaLocalDateTime())
+            .withSynligFremTil(dto.synligFremTil)
             .withTekst(dto.tekst)
             .withLink(URL(dto.link))
             .withSikkerhetsnivaa(loginLevel)
@@ -59,5 +57,10 @@ class OppgaveProducer(private val environment: Environment, private val oppgaveK
             .withSmsVarslingstekst(dto.smsVarslingstekst)
             .withPrefererteKanaler(*getPrefererteKanaler(dto.prefererteKanaler).toTypedArray())
         return builder.build()
+    }
+
+    private fun toLegacyLoginLevel(loa: LevelOfAssurance) = when(loa) {
+        LevelOfAssurance.SUBSTANTIAL -> 3
+        LevelOfAssurance.HIGH -> 4
     }
 }

@@ -6,8 +6,6 @@ import no.nav.personbruker.dittnav.common.util.config.IntEnvVar.getEnvVarAsInt
 import no.nav.personbruker.dittnav.common.util.config.StringEnvVar.getEnvVar
 
 data class Environment(
-    val port: Int = getEnvVarAsInt("PORT", 8080),
-    val rootPath: String = getEnvVar("ROOT_PATH", "tms-event-test-producer"),
     val namespace: String = getEnvVar("NAIS_NAMESPACE"),
     val appnavn: String = "tms-event-test-producer",
     val enableApi: Boolean = getEnvVarAsBoolean("ENABLE_API", false),
