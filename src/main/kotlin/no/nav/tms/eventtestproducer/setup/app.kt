@@ -17,8 +17,9 @@ import no.nav.tms.eventtestproducer.innboks.innboksApi
 import no.nav.tms.eventtestproducer.microfrontend.microfrontedApi
 import no.nav.tms.eventtestproducer.oppgave.oppgaveApi
 import no.nav.tms.eventtestproducer.utkast.utkastApi
+import no.nav.tms.token.support.idporten.sidecar.IdPortenLogin
 import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance.SUBSTANTIAL
-import no.nav.tms.token.support.idporten.sidecar.installIdPortenAuth
+import no.nav.tms.token.support.idporten.sidecar.idPorten
 import java.text.DateFormat
 
 fun main() {
@@ -50,10 +51,14 @@ fun Application.testProducerApi(appContext: ApplicationContext) {
         }
     }
 
-    installIdPortenAuth {
-        setAsDefault = true
-        levelOfAssurance = SUBSTANTIAL
+    authentication {
+        idPorten {
+            setAsDefault = true
+            levelOfAssurance = SUBSTANTIAL
+        }
     }
+
+    install(IdPortenLogin)
 
     install(CORS) {
         allowHost(appContext.environment.corsAllowedOrigins, listOf(appContext.environment.corsAllowedSchemes))

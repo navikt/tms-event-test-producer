@@ -6,7 +6,7 @@ import io.ktor.client.request.post
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.plugin
-import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.*
 import io.ktor.server.routing.HttpMethodRouteSelector
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.Routing
@@ -16,7 +16,7 @@ import io.ktor.server.testing.testApplication
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.tms.token.support.idporten.sidecar.mock.LevelOfAssurance
-import no.nav.tms.token.support.idporten.sidecar.mock.installIdPortenAuthMock
+import no.nav.tms.token.support.idporten.sidecar.mock.idPortenMock
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainAll
@@ -126,11 +126,13 @@ class MicrofrontendsApiTest {
     }
 
     fun ApplicationTestBuilder.setupMicrofrontendApi() = application {
-        installIdPortenAuthMock {
-            setAsDefault = true
-            staticLevelOfAssurance = LevelOfAssurance.LEVEL_4
-            alwaysAuthenticated = true
-            staticUserPid = "12345678910"
+        authentication {
+            idPortenMock {
+                setAsDefault = true
+                staticLevelOfAssurance = LevelOfAssurance.LEVEL_4
+                alwaysAuthenticated = true
+                staticUserPid = "12345678910"
+            }
         }
 
         routing {
