@@ -1,10 +1,10 @@
 package no.nav.tms.eventtestproducer.varsel
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import no.nav.tms.eventtestproducer.setup.KafkaProducerWrapper
 import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import no.nav.tms.varsel.action.*
+import no.nav.tms.varsel.builder.OpprettVarselBuilder
 import no.nav.tms.varsel.builder.VarselActionBuilder
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -35,10 +35,18 @@ class VarselProducer(
     }
 
     private fun opprettVarselEvent(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselDto): String {
+        return if (dto.javaBuilder) {
+            withJavaBuilder(innloggetBruker, eventId, dto)
+        } else {
+            withKotlinBuilder(innloggetBruker, eventId, dto)
+        }
+    }
+
+    private fun withKotlinBuilder(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselDto): String {
         return VarselActionBuilder.opprett {
             type = parseEnum<Varseltype>(dto.type)
             varselId = eventId
-            sensitivitet = mapSensitivity(innloggetBruker.levelOfAssurance)
+            sensitivitet = mapSensitivitet(innloggetBruker.levelOfAssurance)
             ident = innloggetBruker.ident
             tekst = Tekst(
                 spraakkode = dto.spraak,
@@ -60,13 +68,38 @@ class VarselProducer(
         }
     }
 
+    private fun withJavaBuilder(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselDto): String {
+        return OpprettVarselBuilder.newInstance()
+            .withType(parseEnum<Varseltype>(dto.type))
+            .withVarselId(eventId)
+            .withSensitivitet(mapSensitivitet(innloggetBruker.levelOfAssurance))
+            .withIdent(innloggetBruker.ident)
+            .withTekst(dto.spraak, dto.tekst, true)
+            .withLink(dto.link)
+            .withAktivFremTil(dto.aktivFremTil)
+            .setEksternVarsling(dto)
+            .build()
+    }
+
+    private fun OpprettVarselBuilder.setEksternVarsling(dto: ProduceVarselDto): OpprettVarselBuilder {
+        return if (dto.eksternVarsling) {
+            withEksternVarsling(
+                dto.prefererteKanaler.map { parseEnum<EksternKanal>(it) },
+                dto.smsVarslingstekst,
+                dto.epostVarslingstekst,
+                dto.epostVarslingstittel
+            )
+        } else {
+            this
+        }
+    }
     private inline fun <reified T: Enum<T>> parseEnum(string: String): T {
         return enumValues<T>()
             .firstOrNull { it.name.lowercase() == string.lowercase() }
             ?: throw IllegalArgumentException("$string er ikke en gyldig ${T::class.simpleName}")
     }
 
-    private fun mapSensitivity(loa: LevelOfAssurance): Sensitivitet {
+    private fun mapSensitivitet(loa: LevelOfAssurance): Sensitivitet {
        return when(loa) {
            LevelOfAssurance.SUBSTANTIAL -> Sensitivitet.Substantial
            LevelOfAssurance.HIGH -> Sensitivitet.High

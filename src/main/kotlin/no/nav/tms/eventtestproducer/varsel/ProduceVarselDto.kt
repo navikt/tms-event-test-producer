@@ -13,7 +13,8 @@ data class ProduceVarselDto(
     val aktivFremTil: ZonedDateTime? = null,
     val epostVarslingstekst: String? = null,
     val epostVarslingstittel: String? = null,
-    val smsVarslingstekst: String? = null
+    val smsVarslingstekst: String? = null,
+    val javaBuilder: Boolean = false
 )
 
 data class TekstDto(
