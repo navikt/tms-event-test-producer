@@ -10,6 +10,7 @@ import no.nav.tms.eventtestproducer.setup.Kafka.initializeRapidKafkaProducer
 import no.nav.tms.eventtestproducer.setup.Kafka.producerProps
 import no.nav.tms.eventtestproducer.utkast.MultiUtkastProducer
 import no.nav.tms.eventtestproducer.utkast.UtkastRapidProducer
+import no.nav.tms.eventtestproducer.varsel.VarselProducer
 import org.apache.kafka.clients.producer.KafkaProducer
 
 class ApplicationContext {
@@ -32,4 +33,7 @@ class ApplicationContext {
     val microfrontendKafkaProducer = initializeRapidKafkaProducer(environment)
 
     val microfrontendProducer = MicrofrontendProducer(microfrontendKafkaProducer)
+
+    val varselKafkaProducer = initializeRapidKafkaProducer(environment)
+    val varselProducer = VarselProducer(varselKafkaProducer, environment.brukervarselTopicName)
 }

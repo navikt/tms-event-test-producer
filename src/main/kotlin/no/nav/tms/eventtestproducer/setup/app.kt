@@ -17,6 +17,7 @@ import no.nav.tms.eventtestproducer.innboks.innboksApi
 import no.nav.tms.eventtestproducer.microfrontend.microfrontedApi
 import no.nav.tms.eventtestproducer.oppgave.oppgaveApi
 import no.nav.tms.eventtestproducer.utkast.utkastApi
+import no.nav.tms.eventtestproducer.varsel.varselApi
 import no.nav.tms.token.support.idporten.sidecar.IdPortenLogin
 import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance.SUBSTANTIAL
 import no.nav.tms.token.support.idporten.sidecar.idPorten
@@ -75,6 +76,7 @@ fun Application.testProducerApi(appContext: ApplicationContext) {
                 innboksApi(appContext.innboksProducer)
                 utkastApi(appContext.utkastRapidProducer, appContext.utkastMultiProducer)
                 microfrontedApi(appContext.microfrontendProducer)
+                varselApi(appContext.varselProducer)
             }
         }
     }
