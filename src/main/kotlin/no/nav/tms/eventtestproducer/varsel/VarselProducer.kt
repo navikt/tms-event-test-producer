@@ -17,7 +17,7 @@ class VarselProducer(
 
     private val log = KotlinLogging.logger {}
 
-    fun produceBeskjedEventForIdent(innloggetBruker: IdportenUser, dto: ProduceVarselDto) {
+    fun produceOpprettVarselForUser(innloggetBruker: IdportenUser, dto: ProduceVarselDto) {
         try {
             val varselId = UUID.randomUUID().toString()
 

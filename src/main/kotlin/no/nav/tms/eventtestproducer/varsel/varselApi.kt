@@ -8,8 +8,8 @@ fun Route.varselApi(varselProducer: VarselProducer) {
 
     post("/produce/varsel") {
         this.respondForParameterType<ProduceVarselDto> { varselDto ->
-            varselProducer.produceBeskjedEventForIdent(innloggetBruker, varselDto)
-            "Et beskjed-event for brukeren: $innloggetBruker har blitt lagt på kafka."
+            varselProducer.produceOpprettVarselForUser(innloggetBruker, varselDto)
+            "Et opprett-${varselDto.type}-event for brukeren: $innloggetBruker har blitt lagt på kafka."
         }
     }
 

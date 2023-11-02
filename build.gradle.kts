@@ -41,8 +41,8 @@ dependencies {
     implementation(SulkyUlid.sulkyUlid)
     implementation(TmsKtorTokenSupport.idportenSidecar)
     implementation(Utkast.builder)
-    implementation("com.github.navikt.tms-varsel-authority:kotlin-builder:1.0.0-builder-alpha-9")
-    implementation("com.github.navikt.tms-varsel-authority:java-builder:1.0.0-builder-alpha-9")
+    implementation(TmsVarselBuilder.kotlinBuilder)
+    implementation(TmsVarselBuilder.javabuilder)
 
     testImplementation(kotlin("test-junit5"))
     testImplementation(Jjwt.api)
