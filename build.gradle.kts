@@ -14,17 +14,21 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 }
 
 repositories {
+    maven("https://maven.pkg.github.com/navikt/*") {
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")?: "x-access-token"
+            password = System.getenv("GITHUB_TOKEN")?: project.findProperty("githubPassword") as String
+        }
+    }
     mavenCentral()
     maven("https://packages.confluent.io/maven")
     mavenLocal()
-    maven("https://jitpack.io")
 }
 
 dependencies {
-    implementation("com.github.navikt:brukernotifikasjon-schemas:2.5.1")
+    implementation("no.nav.tms:brukernotifikasjon-schemas:2.6.0")
     implementation(Avro.avroSerializer)
     implementation(JacksonDatatype.datatypeJsr310)
-    implementation(DittNAVCommonLib.utils)
     implementation(Kafka.clients)
     implementation(KotlinLogging.logging)
     implementation(Ktor.Client.apache)
@@ -43,6 +47,7 @@ dependencies {
     implementation(Utkast.builder)
     implementation(TmsVarselBuilder.kotlinBuilder)
     implementation(TmsVarselBuilder.javabuilder)
+    implementation(TmsCommonLib.utils)
 
     testImplementation(kotlin("test-junit5"))
     testImplementation(Jjwt.api)

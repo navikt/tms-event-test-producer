@@ -1,9 +1,8 @@
 package no.nav.tms.eventtestproducer.setup
 
-import no.nav.personbruker.dittnav.common.util.config.BooleanEnvVar.getEnvVarAsBoolean
-import no.nav.personbruker.dittnav.common.util.config.IntEnvVar
-import no.nav.personbruker.dittnav.common.util.config.IntEnvVar.getEnvVarAsInt
-import no.nav.personbruker.dittnav.common.util.config.StringEnvVar.getEnvVar
+import no.nav.tms.common.util.config.BooleanEnvVar.getEnvVarAsBoolean
+import no.nav.tms.common.util.config.StringEnvVar.getEnvVar
+
 
 data class Environment(
     val namespace: String = getEnvVar("NAIS_NAMESPACE"),

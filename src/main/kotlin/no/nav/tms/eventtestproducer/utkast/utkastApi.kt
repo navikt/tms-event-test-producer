@@ -6,7 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import no.nav.personbruker.dittnav.common.util.config.StringEnvVar
+import no.nav.tms.common.util.config.StringEnvVar
 import no.nav.tms.eventtestproducer.util.innloggetBruker
 import java.util.*
 
