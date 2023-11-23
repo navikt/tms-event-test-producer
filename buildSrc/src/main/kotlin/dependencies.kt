@@ -8,8 +8,11 @@ object Avro: DependencyGroup {
     val schemaRegistry get() = dependency("kafka-schema-registry")
 }
 
-object Utkast {
-    val builder = "com.github.navikt:tms-utkast:20230203100430-ecf5208"
+object Utkast: DependencyGroup {
+    override val version get() = "20230203100430-ecf5208"
+    override val groupId get() = "no.nav.tms.utkast"
+
+    val builder get() = dependency("builder")
 }
 
 object SulkyUlid: DependencyGroup {
@@ -20,8 +23,8 @@ object SulkyUlid: DependencyGroup {
 }
 
 object TmsVarselBuilder: DependencyGroup {
-    override val groupId get() = "com.github.navikt.tms-varsel-authority"
-    override val version get() = "1.0.0-beta"
+    override val groupId get() = "no.nav.tms.varsel"
+    override val version get() = "1.0.0"
 
     val kotlinBuilder get() = dependency("kotlin-builder")
     val javabuilder get() = dependency("java-builder")
