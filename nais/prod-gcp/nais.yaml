@@ -29,7 +29,6 @@ spec:
     - "https://www.intern.nav.no/tms-event-test-producer"
   resources:
     limits:
-      cpu: 1000m
       memory: 512Mi
     requests:
       cpu: 10m
