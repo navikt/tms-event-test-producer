@@ -53,6 +53,8 @@ fun Route.utkastApi(producer: UtkastRapidProducer, multiProducer: MultiUtkastPro
         val utkastAction = call.receiveText()
 
         producer.sendEvent(utkastId, utkastAction)
+
+        call.respond(HttpStatusCode.OK)
     }
 
     if (StringEnvVar.getEnvVar("NAIS_CLUSTER_NAME") == "dev-gcp") {
