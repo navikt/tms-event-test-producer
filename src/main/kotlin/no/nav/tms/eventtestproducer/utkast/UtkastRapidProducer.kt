@@ -68,4 +68,9 @@ class UtkastRapidProducer(
         kafkaProducer.send(producerRecord)
         log.info("Produsert utkast-deleted på rapid med utkastId $utkastId")
     }
+
+    fun sendEvent(utkastId: String, json: String) {
+        val producerRecord = ProducerRecord(topicName, utkastId, json)
+        log.info("Produsert utkast-event på rapid med utkastId $utkastId")
+    }
 }
