@@ -38,7 +38,7 @@ spec:
     pool: nav-dev
   env:
     - name: CORS_ALLOWED_ORIGINS
-      value: www.intern.dev.nav.no
+      value: "*.dev.nav.no"
     - name: ENABLE_API
       value: "true"
     - name: EVENT_HANDLER_URL
