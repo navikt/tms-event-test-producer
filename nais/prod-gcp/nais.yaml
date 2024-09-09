@@ -27,6 +27,7 @@ spec:
       level: Level3
   ingresses:
     - "https://www.intern.nav.no/tms-event-test-producer"
+    - "https://www.ansatt.nav.no/tms-event-test-producer"
   resources:
     limits:
       memory: 512Mi
