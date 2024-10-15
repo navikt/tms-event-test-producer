@@ -61,7 +61,9 @@ class VarselProducer(
                     prefererteKanaler = dto.prefererteKanaler.map { parseEnum<EksternKanal>(it) },
                     smsVarslingstekst = dto.smsVarslingstekst,
                     epostVarslingstittel = dto.epostVarslingstittel,
-                    epostVarslingstekst = dto.epostVarslingstekst
+                    epostVarslingstekst = dto.epostVarslingstekst,
+                    kanBatches = dto.kanBatches,
+                    utsettSendingTil = dto.utsettSendingTil
                 )
             } else {
                 null
@@ -88,7 +90,9 @@ class VarselProducer(
                 dto.prefererteKanaler.map { parseEnum<EksternKanal>(it) },
                 dto.smsVarslingstekst,
                 dto.epostVarslingstekst,
-                dto.epostVarslingstittel
+                dto.epostVarslingstittel,
+                dto.kanBatches,
+                dto.utsettSendingTil
             )
         } else {
             this

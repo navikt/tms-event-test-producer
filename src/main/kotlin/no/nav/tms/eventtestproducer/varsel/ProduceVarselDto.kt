@@ -11,6 +11,8 @@ data class ProduceVarselDto(
     val eksternVarsling: Boolean = false,
     val prefererteKanaler: List<String> = emptyList(),
     val aktivFremTil: ZonedDateTime? = null,
+    val utsettSendingTil: ZonedDateTime? = null,
+    val kanBatches: Boolean? = null,
     val epostVarslingstekst: String? = null,
     val epostVarslingstittel: String? = null,
     val smsVarslingstekst: String? = null,
