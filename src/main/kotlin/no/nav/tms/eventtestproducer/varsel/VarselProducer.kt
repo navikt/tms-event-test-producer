@@ -6,6 +6,7 @@ import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import no.nav.tms.varsel.action.*
 import no.nav.tms.varsel.builder.InaktiverVarselBuilder
 import no.nav.tms.varsel.builder.OpprettVarselBuilder
+import no.nav.tms.varsel.builder.OpprettVarselBuilder.EksternVarslingBuilder
 import no.nav.tms.varsel.builder.VarselActionBuilder
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -56,17 +57,15 @@ class VarselProducer(
             )
             link = dto.link
             aktivFremTil = dto.aktivFremTil
-            eksternVarsling = if (dto.eksternVarsling) {
-                EksternVarslingBestilling(
-                    prefererteKanaler = dto.prefererteKanaler.map { parseEnum<EksternKanal>(it) },
-                    smsVarslingstekst = dto.smsVarslingstekst,
-                    epostVarslingstittel = dto.epostVarslingstittel,
-                    epostVarslingstekst = dto.epostVarslingstekst,
-                    kanBatches = dto.kanBatches,
-                    utsettSendingTil = dto.utsettSendingTil
-                )
-            } else {
-                null
+             if (dto.eksternVarsling) {
+                 eksternVarsling {
+                     preferertKanal = dto.prefererteKanaler.map { parseEnum<EksternKanal>(it) }.firstOrNull()
+                     smsVarslingstekst = dto.smsVarslingstekst
+                     epostVarslingstittel = dto.epostVarslingstittel
+                     epostVarslingstekst = dto.epostVarslingstekst
+                     kanBatches = dto.kanBatches
+                     utsettSendingTil = dto.utsettSendingTil
+                 }
             }
         }
     }
@@ -87,12 +86,13 @@ class VarselProducer(
     private fun OpprettVarselBuilder.setEksternVarsling(dto: ProduceVarselDto): OpprettVarselBuilder {
         return if (dto.eksternVarsling) {
             withEksternVarsling(
-                dto.prefererteKanaler.map { parseEnum<EksternKanal>(it) },
-                dto.smsVarslingstekst,
-                dto.epostVarslingstekst,
-                dto.epostVarslingstittel,
-                dto.kanBatches,
-                dto.utsettSendingTil
+                OpprettVarselBuilder.eksternVarsling()
+                    .withPreferertKanal(dto.prefererteKanaler.map { parseEnum<EksternKanal>(it) }.firstOrNull())
+                    .withSmsVarslingstekst(dto.smsVarslingstekst)
+                    .withEpostVarslingstittel(dto.epostVarslingstekst)
+                    .withEpostVarslingstekst(dto.epostVarslingstittel)
+                    .withKanBatches(dto.kanBatches)
+                    .withUtsettSendingTil(dto.utsettSendingTil)
             )
         } else {
             this
