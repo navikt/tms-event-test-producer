@@ -28,15 +28,15 @@ fun main() {
 
     embeddedServer(
         factory = Netty,
-        environment = applicationEngineEnvironment {
-            rootPath = "tms-event-test-producer"
-
-            module {
-                testProducerApi(appContext)
-            }
+        configure = {
             connector {
                 port = 8080
             }
+        },
+        module = {
+            rootPath = "tms-event-test-producer"
+
+            testProducerApi(appContext)
         }
     ).start(wait = true)
 }
@@ -85,7 +85,7 @@ fun Application.testProducerApi(appContext: ApplicationContext) {
 }
 
 private fun Application.configureShutdownHook(appContext: ApplicationContext) {
-    environment.monitor.subscribe(ApplicationStopPreparing) {
+    monitor.subscribe(ApplicationStopPreparing) {
         appContext.kafkaProducerBeskjed.flushAndClose()
         appContext.kafkaProducerInnboks.flushAndClose()
         appContext.kafkaProducerOppgave.flushAndClose()

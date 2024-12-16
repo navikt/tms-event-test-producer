@@ -4,12 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.request.post
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
-import io.ktor.server.application.plugin
 import io.ktor.server.auth.*
-import io.ktor.server.routing.HttpMethodRouteSelector
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.Routing
 import io.ktor.server.routing.routing
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
@@ -21,11 +16,9 @@ import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContainAll
 import org.junit.jupiter.api.Test
-import org.junit.platform.commons.logging.LoggerFactory
 
 class MicrofrontendsApiTest {
 
-    private val testLogger = LoggerFactory.getLogger(MicrofrontendProducer::class.java)
     private val producer = mockk<MicrofrontendProducer>(relaxed = true)
     private val objectMapper = jacksonObjectMapper()
 
@@ -129,7 +122,7 @@ class MicrofrontendsApiTest {
         authentication {
             idPortenMock {
                 setAsDefault = true
-                staticLevelOfAssurance = LevelOfAssurance.LEVEL_4
+                staticLevelOfAssurance = LevelOfAssurance.HIGH
                 alwaysAuthenticated = true
                 staticUserPid = "12345678910"
             }
@@ -140,20 +133,7 @@ class MicrofrontendsApiTest {
                 microfrontedApi(producer)
             }
         }
-
-        logRoutes()
     }
-
-    private fun Application.logRoutes() {
-        val allRoutes = allRoutes(plugin(Routing))
-        val allRoutesWithMethod = allRoutes.filter { it.selector is HttpMethodRouteSelector }
-        testLogger.debug { "Application has ${allRoutesWithMethod.size} routes" }
-
-        allRoutesWithMethod.forEach {
-            testLogger.debug { "route: $it" }
-        }
-    }
-
 }
 
 private fun JsonNode.keys(): MutableList<String> {
@@ -161,6 +141,3 @@ private fun JsonNode.keys(): MutableList<String> {
     fieldNames().forEachRemaining { key -> keys.add(key) }
     return keys
 }
-
-
-private fun allRoutes(root: Route): List<Route> = listOf(root) + root.children.flatMap { allRoutes(it) }
