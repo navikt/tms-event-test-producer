@@ -37,7 +37,6 @@ dependencies {
     implementation(Ktor.Server.defaultHeaders)
     implementation(Ktor.Server.netty)
     implementation(Logstash.logbackEncoder)
-    implementation(Prometheus.logback)
     implementation(SulkyUlid.sulkyUlid)
     implementation(TmsKtorTokenSupport.idportenSidecar)
     implementation(Utkast.builder)

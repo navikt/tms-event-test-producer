@@ -1,13 +1,8 @@
 package no.nav.tms.eventtestproducer.microfrontend
 
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.ApplicationCall
-import io.ktor.server.application.call
 import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.post
-import io.ktor.server.routing.route
-import io.ktor.util.pipeline.PipelineContext
+import io.ktor.server.routing.*
 import no.nav.tms.eventtestproducer.util.innloggetBruker
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -17,7 +12,7 @@ import org.slf4j.LoggerFactory
 
 private val knowIds = listOf("mk1", "mk2", "mk3", "mk4")
 
-private val PipelineContext<Unit, ApplicationCall>.microfrontendId: String
+private val RoutingContext.microfrontendId: String
     get() = call.parameters["microfrontendId"]?.also { id ->
         if (knowIds.none { it == id }) throw IllegalArgumentException("Ukjent microfrontendId")
     } ?: throw IllegalArgumentException("microfrontendId mangler i path")

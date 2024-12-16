@@ -1,10 +1,8 @@
 package no.nav.tms.eventtestproducer.setup
 
 import io.ktor.http.ContentType
-import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.prometheus.client.CollectorRegistry
 
 fun Route.healthApi() {
 
