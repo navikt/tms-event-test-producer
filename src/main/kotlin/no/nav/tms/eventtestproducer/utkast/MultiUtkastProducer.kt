@@ -30,7 +30,7 @@ class MultiUtkastProducer(
                 .withLink(defaltLink)
                 .apply {
                     multiUtkast.languages.forEach { la ->
-                        withTittelI18n("$la - $tittel", Locale(la))
+                        withTittelI18n("$la - $tittel", Locale.of(la))
                     }
                 }
                 .create()
@@ -57,7 +57,7 @@ class MultiUtkastProducer(
                         withTittel(tittel)
                     }
                     multiUtkast.languages.forEach { la ->
-                        withTittelI18n("$la - $tittel", Locale(la))
+                        withTittelI18n("$la - $tittel", Locale.of(la))
                     }
                 }
                 .update()

@@ -10,6 +10,7 @@ import no.nav.tms.eventtestproducer.setup.KafkaProducerWrapper
 import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import org.slf4j.LoggerFactory
+import java.net.URI
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -56,7 +57,7 @@ class BeskjedProducer(private val environment: Environment, private val beskjedK
                 .withSmsVarslingstekst(dto.smsVarslingstekst)
                 .withPrefererteKanaler(*getPrefererteKanaler(dto.prefererteKanaler).toTypedArray())
         if(!dto.link.isNullOrBlank()) {
-            builder.withLink(URL(dto.link))
+            builder.withLink(URI.create(dto.link).toURL())
         }
         return builder.build()
     }

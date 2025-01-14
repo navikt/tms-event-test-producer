@@ -10,6 +10,7 @@ import no.nav.tms.eventtestproducer.setup.KafkaProducerWrapper
 import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import org.slf4j.LoggerFactory
+import java.net.URI
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -48,7 +49,7 @@ class InnboksProducer(private val environment: Environment, private val innboksK
         val builder = InnboksInputBuilder()
             .withTidspunkt(nowInMs)
             .withTekst(dto.tekst)
-            .withLink(URL(dto.link))
+            .withLink(URI.create(dto.link).toURL())
             .withSikkerhetsnivaa(loginLevel)
             .withEksternVarsling(dto.eksternVarsling)
             .withEpostVarslingstekst(dto.epostVarslingstekst)

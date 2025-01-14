@@ -25,7 +25,7 @@ class UtkastRapidProducer(
             .withLink(utkastCreate.link)
             .apply {
                 utkastCreate.tittelI18n?.forEach { (spraak, tittel) ->
-                    withTittelI18n(tittel, Locale(spraak))
+                    withTittelI18n(tittel, Locale.of(spraak))
                 }
             }
             .create()
@@ -49,7 +49,7 @@ class UtkastRapidProducer(
                 }
 
                 utkastUpdate.tittelI18n?.forEach { (spraak, tittel) ->
-                    withTittelI18n(tittel, Locale(spraak))
+                    withTittelI18n(tittel, Locale.of(spraak))
                 }
             }
             .update()
