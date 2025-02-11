@@ -42,6 +42,7 @@ dependencies {
     implementation(Utkast.builder)
     implementation(TmsVarselBuilder.kotlinBuilder)
     implementation(TmsVarselBuilder.javabuilder)
+    implementation(TmsSoknadsKvittering.kotlinBuilder)
     implementation(TmsCommonLib.utils)
 
     testImplementation(JunitPlatform.launcher)

@@ -29,3 +29,10 @@ object TmsVarselBuilder: DependencyGroup {
     val kotlinBuilder get() = dependency("kotlin-builder")
     val javabuilder get() = dependency("java-builder")
 }
+
+object TmsSoknadsKvittering: DependencyGroup {
+    override val groupId get() = "no.nav.tms.soknadskvittering"
+    override val version get() = "0.1.0-alpha"
+
+    val kotlinBuilder get() = dependency("kotlin-builder")
+}

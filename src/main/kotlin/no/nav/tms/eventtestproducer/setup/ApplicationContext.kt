@@ -8,6 +8,7 @@ import no.nav.tms.eventtestproducer.microfrontend.MicrofrontendProducer
 import no.nav.tms.eventtestproducer.oppgave.OppgaveProducer
 import no.nav.tms.eventtestproducer.setup.Kafka.initializeRapidKafkaProducer
 import no.nav.tms.eventtestproducer.setup.Kafka.producerProps
+import no.nav.tms.eventtestproducer.soknadskvittering.SoknadEventProducer
 import no.nav.tms.eventtestproducer.utkast.MultiUtkastProducer
 import no.nav.tms.eventtestproducer.utkast.UtkastRapidProducer
 import no.nav.tms.eventtestproducer.varsel.VarselProducer
@@ -36,4 +37,7 @@ class ApplicationContext {
 
     val varselKafkaProducer = initializeRapidKafkaProducer(environment)
     val varselProducer = VarselProducer(varselKafkaProducer, environment.brukervarselTopicName)
+
+    val soknadKafkaProducer = initializeRapidKafkaProducer(environment)
+    val soknadEventProducer = SoknadEventProducer(soknadKafkaProducer, environment.soknadskvitteringTopicName)
 }
