@@ -18,7 +18,7 @@ class SoknadEventProducer(
     fun opprettSoknad(innloggetBruker: IdportenUser, opprett: SoknadRequest.Opprett): String? = try {
         val soknadsId = UUID.randomUUID().toString()
 
-        val opprettetEvent = opprettetEvent(soknadsId, opprett)
+        val opprettetEvent = opprettetEvent(soknadsId, innloggetBruker.ident, opprett)
 
         sendEvent(
             key = soknadsId,
@@ -72,8 +72,9 @@ class SoknadEventProducer(
         kafkaProducer.send(ProducerRecord(topicName, key, event))
     }
 
-    private fun opprettetEvent(soknadsId: String, opprett: SoknadRequest.Opprett) = SoknadEventBuilder.opprettet {
+    private fun opprettetEvent(soknadsId: String, ident: String, opprett: SoknadRequest.Opprett) = SoknadEventBuilder.opprettet {
         this.soknadsId = soknadsId
+        this.ident = ident
         tittel = opprett.tittel
         temakode = opprett.temakode
         skjemanummer = opprett.skjemanummer
