@@ -6,14 +6,14 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.nav.tms.eventtestproducer.util.innloggetBruker
-import no.nav.tms.soknad.event.validation.SoknadsKvitteringValidationException
+import no.nav.tms.soknad.event.validation.SoknadskvitteringValidationException
 
 fun Route.soknadApi(producer: SoknadEventProducer) {
 
     val log = KotlinLogging.logger {}
 
     post("/produce/soknad/opprett") {
-        val opprettRequest: SoknadRequest.Opprett = call.receive()
+        val opprettRequest: SoknadRequest.Innsend = call.receive()
         val soknadsId = producer.opprettSoknad(innloggetBruker, opprettRequest)
 
         if (soknadsId != null) {
@@ -31,7 +31,7 @@ fun Route.soknadApi(producer: SoknadEventProducer) {
             producer.oppdaterSoknad(oppdaterRequest)
 
             log.info { "Soknad-oppdatert event med id [${oppdaterRequest.soknadsId}] er lagt på kafka" }
-        } catch (e: SoknadsKvitteringValidationException) {
+        } catch (e: SoknadskvitteringValidationException) {
             log.warn(e) { "Feilaktig innhold i oppdater-request" }
             call.respond(HttpStatusCode.BadRequest)
         }
@@ -43,7 +43,7 @@ fun Route.soknadApi(producer: SoknadEventProducer) {
             producer.ferdigstillSoknad(ferdigstillRequest)
 
             log.info { "Soknad-ferdigstilt event med id [${ferdigstillRequest.soknadsId}] er lagt på kafka" }
-        } catch (e: SoknadsKvitteringValidationException) {
+        } catch (e: SoknadskvitteringValidationException) {
             log.warn(e) { "Feilaktig innhold i ferdigstill-request" }
             call.respond(HttpStatusCode.BadRequest)
         }
@@ -55,7 +55,7 @@ fun Route.soknadApi(producer: SoknadEventProducer) {
             producer.mottaVedlegg(mottaRequest)
 
             log.info { "Vedlegg-etterspurt event med id [${mottaRequest.soknadsId}] er lagt på kafka" }
-        } catch (e: SoknadsKvitteringValidationException) {
+        } catch (e: SoknadskvitteringValidationException) {
             log.warn(e) { "Feilaktig innhold i motta-vedlegg request" }
             call.respond(HttpStatusCode.BadRequest)
         }
@@ -68,7 +68,7 @@ fun Route.soknadApi(producer: SoknadEventProducer) {
             producer.ettersporrVedlegg(ettersporrRequest)
 
             log.info { "Vedlegg-mottatt event med id [${ettersporrRequest.soknadsId}] er lagt på kafka" }
-        } catch (e: SoknadsKvitteringValidationException) {
+        } catch (e: SoknadskvitteringValidationException) {
             log.warn(e) { "Feilaktig innhold i ettersporr-vedlegg request" }
             call.respond(HttpStatusCode.BadRequest)
         }

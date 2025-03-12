@@ -2,12 +2,13 @@ package no.nav.tms.eventtestproducer.soknadskvittering
 import java.time.LocalDate
 
 object SoknadRequest {
-    data class Opprett(
+    data class Innsend(
         val tittel: String,
         val temakode: String = "UKJ",
         val skjemanummer: String = "Skjema-123",
         val fristEttersending: LocalDate = LocalDate.now().plusDays(14),
         val linkSoknad: String? = null,
+        val linkEttersending: String? = null,
         val journalpostId: String? = null,
         val mottatteVedlegg: List<MottattVedlegg> = defaultMottatt,
         val etterspurteVedlegg: List<EtterspurtVedlegg> = defaultEtterspurt,
@@ -85,6 +86,7 @@ object SoknadRequest {
         val vedleggsId: String,
         val tittel: String,
         val brukerErAvsender: Boolean,
-        val linkVedlegg: String? = null
+        val linkVedlegg: String? = null,
+        val journalpostId: String? = null
     )
 }

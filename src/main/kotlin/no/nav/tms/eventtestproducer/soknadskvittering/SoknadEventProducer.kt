@@ -15,10 +15,10 @@ class SoknadEventProducer(
 
     private val log = KotlinLogging.logger {}
 
-    fun opprettSoknad(innloggetBruker: IdportenUser, opprett: SoknadRequest.Opprett): String? = try {
+    fun opprettSoknad(innloggetBruker: IdportenUser, opprett: SoknadRequest.Innsend): String? = try {
         val soknadsId = UUID.randomUUID().toString()
 
-        val opprettetEvent = opprettetEvent(soknadsId, innloggetBruker.ident, opprett)
+        val opprettetEvent = innsendEvent(soknadsId, innloggetBruker.ident, opprett)
 
         sendEvent(
             key = soknadsId,
@@ -72,7 +72,7 @@ class SoknadEventProducer(
         kafkaProducer.send(ProducerRecord(topicName, key, event))
     }
 
-    private fun opprettetEvent(soknadsId: String, ident: String, opprett: SoknadRequest.Opprett) = SoknadEventBuilder.opprettet {
+    private fun innsendEvent(soknadsId: String, ident: String, opprett: SoknadRequest.Innsend) = SoknadEventBuilder.innsendt {
         this.soknadsId = soknadsId
         this.ident = ident
         tittel = opprett.tittel
@@ -135,6 +135,7 @@ class SoknadEventProducer(
         vedleggsId = mottaVedlegg.vedleggsId
         tittel = mottaVedlegg.tittel
         linkVedlegg = mottaVedlegg.linkVedlegg
+        journalpostId = mottaVedlegg.journalpostId
         brukerErAvsender = mottaVedlegg.brukerErAvsender
         tidspunktMottatt = ZonedDateTime.now()
     }
