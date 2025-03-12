@@ -12,12 +12,12 @@ fun Route.soknadApi(producer: SoknadEventProducer) {
 
     val log = KotlinLogging.logger {}
 
-    post("/produce/soknad/opprett") {
-        val opprettRequest: SoknadRequest.Innsend = call.receive()
-        val soknadsId = producer.opprettSoknad(innloggetBruker, opprettRequest)
+    post("/produce/soknad/innsend") {
+        val innsendRequest: SoknadRequest.Innsend = call.receive()
+        val soknadsId = producer.innsendSoknad(innloggetBruker, innsendRequest)
 
         if (soknadsId != null) {
-            log.info { "Soknad-opprettet event med id [$soknadsId] er lagt på kafka" }
+            log.info { "Soknad-innsendt event med id [$soknadsId] er lagt på kafka" }
             call.respondText(soknadsId)
         } else {
             log.warn { "Feilaktig innhold i opprett-request" }

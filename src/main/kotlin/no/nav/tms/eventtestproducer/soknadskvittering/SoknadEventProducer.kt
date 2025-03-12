@@ -15,7 +15,7 @@ class SoknadEventProducer(
 
     private val log = KotlinLogging.logger {}
 
-    fun opprettSoknad(innloggetBruker: IdportenUser, opprett: SoknadRequest.Innsend): String? = try {
+    fun innsendSoknad(innloggetBruker: IdportenUser, opprett: SoknadRequest.Innsend): String? = try {
         val soknadsId = UUID.randomUUID().toString()
 
         val opprettetEvent = innsendEvent(soknadsId, innloggetBruker.ident, opprett)
