@@ -1,9 +1,5 @@
 package no.nav.tms.eventtestproducer.setup
 
-import io.confluent.kafka.serializers.KafkaAvroSerializer
-import io.confluent.kafka.serializers.KafkaAvroSerializerConfig
-import io.netty.util.NetUtil.getHostname
-import no.nav.brukernotifikasjon.schemas.builders.domain.Eventtype
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -13,24 +9,9 @@ import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.StringSerializer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.net.InetSocketAddress
 import java.util.*
 
 object Kafka {
-
-    fun producerProps(env: Environment, type: Eventtype): Properties {
-        return Properties().apply {
-            put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, env.kafkaBrokers)
-            put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, env.kafkaSchemaRegistry)
-            put(ProducerConfig.CLIENT_ID_CONFIG, type.name + getHostname(InetSocketAddress(0)))
-            put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
-            put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer::class.java)
-            put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 40000)
-            put(ProducerConfig.ACKS_CONFIG, "all")
-            put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true")
-            putAll(credentialPropsAiven(env.securityVars))
-        }
-    }
 
     fun initializeRapidKafkaProducer(environment: Environment) = KafkaProducer<String, String>(
         Properties().apply {
@@ -44,14 +25,12 @@ object Kafka {
             put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 40000)
             put(ProducerConfig.ACKS_CONFIG, "all")
             put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true")
-            putAll(credentialPropsAiven(environment.securityVars))
+            putAll(credentialProps(environment.securityVars))
         }
     )
 
-    private fun credentialPropsAiven(securityVars: SecurityVars): Properties {
+    private fun credentialProps(securityVars: SecurityVars): Properties {
         return Properties().apply {
-            put(KafkaAvroSerializerConfig.USER_INFO_CONFIG, "${securityVars.kafkaSchemaRegistryUser}:${securityVars.kafkaSchemaRegistryPassword}")
-            put(KafkaAvroSerializerConfig.BASIC_AUTH_CREDENTIALS_SOURCE, "USER_INFO")
             put(SaslConfigs.SASL_MECHANISM, "PLAIN")
             put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SSL")
             put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, "jks")

@@ -4,9 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance
 import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
 import no.nav.tms.varsel.action.*
-import no.nav.tms.varsel.builder.InaktiverVarselBuilder
 import no.nav.tms.varsel.builder.OpprettVarselBuilder
-import no.nav.tms.varsel.builder.OpprettVarselBuilder.EksternVarslingBuilder
 import no.nav.tms.varsel.builder.VarselActionBuilder
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -19,7 +17,7 @@ class VarselProducer(
 
     private val log = KotlinLogging.logger {}
 
-    fun produceOpprettVarselForUser(innloggetBruker: IdportenUser, dto: ProduceVarselDto) {
+    fun produceOpprettVarselForUser(innloggetBruker: IdportenUser, dto: ProduceVarselRequest) {
         try {
             val varselId = UUID.randomUUID().toString()
 
@@ -36,7 +34,7 @@ class VarselProducer(
         kafkaProducer.send(ProducerRecord(topicName, key, event))
     }
 
-    private fun opprettVarselEvent(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselDto): String {
+    private fun opprettVarselEvent(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselRequest): String {
         return if (dto.javaBuilder) {
             withJavaBuilder(innloggetBruker, eventId, dto)
         } else {
@@ -44,7 +42,7 @@ class VarselProducer(
         }
     }
 
-    private fun withKotlinBuilder(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselDto): String {
+    private fun withKotlinBuilder(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselRequest): String {
         return VarselActionBuilder.opprett {
             type = parseEnum<Varseltype>(dto.type)
             varselId = eventId
@@ -59,7 +57,7 @@ class VarselProducer(
             aktivFremTil = dto.aktivFremTil
              if (dto.eksternVarsling) {
                  eksternVarsling {
-                     preferertKanal = dto.prefererteKanaler.map { parseEnum<EksternKanal>(it) }.firstOrNull()
+                     preferertKanal = dto.preferertKanal?.let { parseEnum<EksternKanal>(it) }
                      smsVarslingstekst = dto.smsVarslingstekst
                      epostVarslingstittel = dto.epostVarslingstittel
                      epostVarslingstekst = dto.epostVarslingstekst
@@ -70,7 +68,7 @@ class VarselProducer(
         }
     }
 
-    private fun withJavaBuilder(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselDto): String {
+    private fun withJavaBuilder(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselRequest): String {
         return OpprettVarselBuilder.newInstance()
             .withType(parseEnum<Varseltype>(dto.type))
             .withVarselId(eventId)
@@ -83,11 +81,11 @@ class VarselProducer(
             .build()
     }
 
-    private fun OpprettVarselBuilder.setEksternVarsling(dto: ProduceVarselDto): OpprettVarselBuilder {
+    private fun OpprettVarselBuilder.setEksternVarsling(dto: ProduceVarselRequest): OpprettVarselBuilder {
         return if (dto.eksternVarsling) {
             withEksternVarsling(
                 OpprettVarselBuilder.eksternVarsling()
-                    .withPreferertKanal(dto.prefererteKanaler.map { parseEnum<EksternKanal>(it) }.firstOrNull())
+                    .withPreferertKanal(dto.preferertKanal?.let { parseEnum<EksternKanal>(it) })
                     .withSmsVarslingstekst(dto.smsVarslingstekst)
                     .withEpostVarslingstittel(dto.epostVarslingstekst)
                     .withEpostVarslingstekst(dto.epostVarslingstittel)

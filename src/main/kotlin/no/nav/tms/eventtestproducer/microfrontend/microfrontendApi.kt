@@ -3,7 +3,7 @@ package no.nav.tms.eventtestproducer.microfrontend
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.respond
 import io.ktor.server.routing.*
-import no.nav.tms.eventtestproducer.util.innloggetBruker
+import no.nav.tms.eventtestproducer.setup.innloggetBruker
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.intellij.lang.annotations.Language

@@ -17,13 +17,11 @@ repositories {
         url = uri("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
     }
     mavenCentral()
-    maven("https://packages.confluent.io/maven")
+    maven("https://packages.confluet.io/maven")
     mavenLocal()
 }
 
 dependencies {
-    implementation("no.nav.tms:brukernotifikasjon-schemas:2.6.0")
-    implementation(Avro.avroSerializer)
     implementation(JacksonDatatype.datatypeJsr310)
     implementation(Kafka.clients)
     implementation(KotlinLogging.logging)
@@ -51,7 +49,8 @@ dependencies {
     testImplementation(JunitJupiter.api)
     testImplementation(JunitJupiter.engine)
     testImplementation(Kafka.kafka_2_12)
-    testImplementation(Kluent.kluent)
+    testImplementation(Kotest.assertionsCore)
+    testImplementation(Kotest.extensions)
     testImplementation(Ktor.Test.clientMock)
     testImplementation(Mockk.mockk)
     testImplementation(Ktor.Test.serverTestHost)

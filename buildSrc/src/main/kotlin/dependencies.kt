@@ -1,13 +1,5 @@
 import default.*
 
-object Avro: DependencyGroup {
-    override val groupId get() = "io.confluent"
-    override val version get() = "6.2.1"
-
-    val avroSerializer get() = dependency("kafka-avro-serializer")
-    val schemaRegistry get() = dependency("kafka-schema-registry")
-}
-
 object Utkast: DependencyGroup {
     override val version get() = "20230203100430-ecf5208"
     override val groupId get() = "no.nav.tms.utkast"

@@ -2,12 +2,11 @@ package no.nav.tms.eventtestproducer.utkast
 
 import de.huxhorn.sulky.ulid.ULID
 import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.nav.tms.common.util.config.StringEnvVar
-import no.nav.tms.eventtestproducer.util.innloggetBruker
+import no.nav.tms.eventtestproducer.setup.innloggetBruker
 import java.util.*
 
 fun Route.utkastApi(producer: UtkastRapidProducer, multiProducer: MultiUtkastProducer) {
