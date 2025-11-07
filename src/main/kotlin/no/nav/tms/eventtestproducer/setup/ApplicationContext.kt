@@ -10,14 +10,14 @@ class ApplicationContext {
 
     val environment = Environment()
 
-    val kafkaRapidProducer = initializeRapidKafkaProducer(environment)
+    val kafkaRapidProducer = initializeRapidKafkaProducer()
     val utkastRapidProducer = UtkastRapidProducer(kafkaRapidProducer, environment.utkastTopicName)
     val utkastMultiProducer = MultiUtkastProducer(kafkaRapidProducer, environment.utkastTopicName)
 
-    val microfrontendKafkaProducer = initializeRapidKafkaProducer(environment)
+    val microfrontendKafkaProducer = initializeRapidKafkaProducer()
 
     val microfrontendProducer = MicrofrontendProducer(microfrontendKafkaProducer)
 
-    val varselKafkaProducer = initializeRapidKafkaProducer(environment)
+    val varselKafkaProducer = initializeRapidKafkaProducer()
     val varselProducer = VarselProducer(varselKafkaProducer, environment.brukervarselTopicName)
 }
