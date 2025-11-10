@@ -221,7 +221,7 @@ class MicrofrontendsApiTest {
         type = type,
         tekst = tekst,
         spraak = spraak,
-        link = link,
+        _link = link,
         tekster = tekster,
         eksternVarsling = eksternVarsling,
         preferertKanal = preferertKanal,
