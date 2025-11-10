@@ -8,8 +8,8 @@ import java.time.ZonedDateTime
 data class ProduceVarselRequest(
     var type: String = "lateinit",
     val tekst: String,
-    val spraak: String,
-    val link: String?,
+    @JsonProperty("link") private val _link: String? = null,
+    val spraak: String = "nb",
     val tekster: List<TekstDto> = emptyList(),
     val eksternVarsling: Boolean = false,
     val preferertKanal: String? = null,
@@ -24,6 +24,7 @@ data class ProduceVarselRequest(
     @JsonProperty("synligFremTil") private val _synligFremTil: LocalDateTime? = null,
 ) {
     val aktivFremTil = _aktivFremTil ?: _synligFremTil?.atZone(ZoneId.of("Z"))
+    val link = if (_link.isNullOrBlank()) null else _link
 }
 
 data class TekstDto(
