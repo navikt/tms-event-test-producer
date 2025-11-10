@@ -12,15 +12,14 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.routing.*
-import no.nav.tms.eventtestproducer.beskjed.beskjedApi
-import no.nav.tms.eventtestproducer.innboks.innboksApi
 import no.nav.tms.eventtestproducer.microfrontend.microfrontedApi
-import no.nav.tms.eventtestproducer.oppgave.oppgaveApi
 import no.nav.tms.eventtestproducer.utkast.utkastApi
 import no.nav.tms.eventtestproducer.varsel.varselApi
 import no.nav.tms.token.support.idporten.sidecar.IdPortenLogin
 import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance.SUBSTANTIAL
 import no.nav.tms.token.support.idporten.sidecar.idPorten
+import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
+import no.nav.tms.token.support.idporten.sidecar.user.IdportenUserFactory
 import java.text.DateFormat
 
 fun main() {
@@ -71,23 +70,14 @@ fun Application.testProducerApi(appContext: ApplicationContext) {
         healthApi()
         authenticate {
             if(appContext.environment.enableApi) {
-                oppgaveApi(appContext.oppgaveProducer)
-                beskjedApi(appContext.beskjedProducer)
-                innboksApi(appContext.innboksProducer)
                 utkastApi(appContext.utkastRapidProducer, appContext.utkastMultiProducer)
                 microfrontedApi(appContext.microfrontendProducer)
                 varselApi(appContext.varselProducer)
             }
         }
     }
-
-    configureShutdownHook(appContext)
 }
 
-private fun Application.configureShutdownHook(appContext: ApplicationContext) {
-    monitor.subscribe(ApplicationStopPreparing) {
-        appContext.kafkaProducerBeskjed.flushAndClose()
-        appContext.kafkaProducerInnboks.flushAndClose()
-        appContext.kafkaProducerOppgave.flushAndClose()
-    }
-}
+val RoutingContext.innloggetBruker: IdportenUser
+    get() = IdportenUserFactory.createIdportenUser(call)
+

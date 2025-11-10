@@ -41,20 +41,6 @@ spec:
       value: "*.dev.nav.no"
     - name: ENABLE_API
       value: "true"
-    - name: EVENT_HANDLER_URL
-      value: https://dittnav-event-handler.dev.intern.nav.no
-    - name: EVENTHANDLER_CLIENT_ID
-      value: dev-gcp:min-side:dittnav-event-handler
-    - name: OPEN_INPUT_BESKJED_TOPIC
-      value: min-side.aapen-brukernotifikasjon-beskjed-v1
-    - name: OPEN_INPUT_DONE_TOPIC
-      value: min-side.aapen-brukernotifikasjon-done-v1
-    - name: OPEN_INPUT_INNBOKS_TOPIC
-      value: min-side.aapen-brukernotifikasjon-innboks-v1
-    - name: OPEN_INPUT_OPPGAVE_TOPIC
-      value: min-side.aapen-brukernotifikasjon-oppgave-v1
-    - name: OPEN_INPUT_STATUSOPPDATERING_TOPIC
-      value: min-side.aapen-brukernotifikasjon-statusoppdatering-v1
     - name: UTKAST_TOPIC_NAME
       value: min-side.aapen-utkast-v1
 

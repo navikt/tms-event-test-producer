@@ -2,6 +2,8 @@ package no.nav.tms.eventtestproducer.microfrontend
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.shouldBe
 import io.ktor.client.request.post
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.auth.*
@@ -12,9 +14,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.tms.token.support.idporten.sidecar.mock.LevelOfAssurance
 import no.nav.tms.token.support.idporten.sidecar.mock.idPortenMock
-import org.amshove.kluent.shouldBe
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldContainAll
 import org.junit.jupiter.api.Test
 
 class MicrofrontendsApiTest {
@@ -35,34 +34,34 @@ class MicrofrontendsApiTest {
 
         objectMapper.readTree(v3Disable("123", "mk4")).apply {
             this.keys().apply {
-                this shouldContainAll listOf("microfrontend_id", "@initiated_by", "ident", "@action")
-                size shouldBeEqualTo 4
+                this shouldContainAll  listOf("microfrontend_id", "@initiated_by", "ident", "@action")
+                size shouldBe 4
             }
-            this["microfrontend_id"].asText() shouldBeEqualTo "mk4"
-            this["ident"].asText() shouldBeEqualTo "123"
-            this["@action"].asText() shouldBeEqualTo "disable"
-            this["@initiated_by"].asText() shouldBeEqualTo "minside-testproducer"
+            this["microfrontend_id"].asText() shouldBe "mk4"
+            this["ident"].asText() shouldBe "123"
+            this["@action"].asText() shouldBe "disable"
+            this["@initiated_by"].asText() shouldBe "minside-testproducer"
         }
 
         objectMapper.readTree(v2Disable("123", "mk4")).apply {
             this.keys().apply {
                 this shouldContainAll listOf("microfrontend_id", "initiated_by", "ident", "@action")
-                size shouldBeEqualTo 4
+                size shouldBe 4
             }
-            this["microfrontend_id"].asText() shouldBeEqualTo "mk4"
-            this["ident"].asText() shouldBeEqualTo "123"
-            this["@action"].asText() shouldBeEqualTo "disable"
-            this["initiated_by"].asText() shouldBeEqualTo "minside-testproducer"
+            this["microfrontend_id"].asText() shouldBe "mk4"
+            this["ident"].asText() shouldBe "123"
+            this["@action"].asText() shouldBe "disable"
+            this["initiated_by"].asText() shouldBe "minside-testproducer"
         }
 
         objectMapper.readTree(v1Disable("123", "mk4")).apply {
             this.keys().apply {
                 this shouldContainAll listOf("microfrontend_id", "ident", "@action")
-                size shouldBeEqualTo 3
+                size shouldBe 3
             }
-            this["microfrontend_id"].asText() shouldBeEqualTo "mk4"
-            this["ident"].asText() shouldBeEqualTo "123"
-            this["@action"].asText() shouldBeEqualTo "disable"
+            this["microfrontend_id"].asText() shouldBe "mk4"
+            this["ident"].asText() shouldBe "123"
+            this["@action"].asText() shouldBe "disable"
         }
 
 
@@ -85,35 +84,35 @@ class MicrofrontendsApiTest {
         objectMapper.readTree(v3Enable("123", "mk4")).apply {
             this.keys().apply {
                 this shouldContainAll listOf("microfrontend_id", "@initiated_by", "ident", "@action", "sensitivitet")
-                size shouldBeEqualTo 5
+                size shouldBe 5
             }
-            this["microfrontend_id"].asText() shouldBeEqualTo "mk4"
-            this["ident"].asText() shouldBeEqualTo "123"
-            this["@action"].asText() shouldBeEqualTo "enable"
-            this["@initiated_by"].asText() shouldBeEqualTo "minside-testproducer"
-            this["sensitivitet"].asText() shouldBeEqualTo "high"
+            this["microfrontend_id"].asText() shouldBe "mk4"
+            this["ident"].asText() shouldBe "123"
+            this["@action"].asText() shouldBe "enable"
+            this["@initiated_by"].asText() shouldBe "minside-testproducer"
+            this["sensitivitet"].asText() shouldBe "high"
         }
 
         objectMapper.readTree(v2Enable("123", "mk4")).apply {
             this.keys().apply {
                 this shouldContainAll listOf("microfrontend_id", "initiated_by", "ident", "@action", "sikkerhetsnivå")
-                size shouldBeEqualTo 5
+                size shouldBe 5
             }
-            this["microfrontend_id"].asText() shouldBeEqualTo "mk4"
-            this["ident"].asText() shouldBeEqualTo "123"
-            this["@action"].asText() shouldBeEqualTo "enable"
-            this["initiated_by"].asText() shouldBeEqualTo "minside-testproducer"
-            this["sikkerhetsnivå"].asInt() shouldBeEqualTo 4
+            this["microfrontend_id"].asText() shouldBe "mk4"
+            this["ident"].asText() shouldBe "123"
+            this["@action"].asText() shouldBe "enable"
+            this["initiated_by"].asText() shouldBe "minside-testproducer"
+            this["sikkerhetsnivå"].asInt() shouldBe 4
         }
 
         objectMapper.readTree(v1Enable("123", "mk4")).apply {
             this.keys().apply {
                 this shouldContainAll listOf("microfrontend_id", "ident", "@action")
-                size shouldBeEqualTo 3
+                size shouldBe 3
             }
-            this["microfrontend_id"].asText() shouldBeEqualTo "mk4"
-            this["ident"].asText() shouldBeEqualTo "123"
-            this["@action"].asText() shouldBeEqualTo "enable"
+            this["microfrontend_id"].asText() shouldBe "mk4"
+            this["ident"].asText() shouldBe "123"
+            this["@action"].asText() shouldBe "enable"
         }
 
     }
