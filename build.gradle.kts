@@ -48,7 +48,6 @@ dependencies {
     testImplementation(Jjwt.orgjson)
     testImplementation(JunitJupiter.api)
     testImplementation(JunitJupiter.engine)
-    testImplementation(Kafka.kafka_2_12)
     testImplementation(Kotest.assertionsCore)
     testImplementation(Kotest.extensions)
     testImplementation(Ktor.Test.clientMock)
