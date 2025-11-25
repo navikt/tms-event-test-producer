@@ -31,6 +31,7 @@ class MicrofrontendsApiTest {
 
     private val mockProducer = MockProducer(
         false,
+        null,
         StringSerializer(),
         StringSerializer()
     )
