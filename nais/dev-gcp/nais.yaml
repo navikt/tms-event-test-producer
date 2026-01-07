@@ -6,8 +6,6 @@ metadata:
   labels:
     team: min-side
 spec:
-  envFrom:
-    - configmap: loginservice-idporten
   image: {{version}}
   port: 8080
   liveness:
@@ -43,5 +41,3 @@ spec:
       value: "true"
     - name: UTKAST_TOPIC_NAME
       value: min-side.aapen-utkast-v1
-
-
