@@ -8,7 +8,6 @@ metadata:
 spec:
   envFrom:
     - secret: tms-event-test-producer-secrets
-    - configmap: loginservice-idporten
   image: {{version}}
   port: 8080
   liveness:
@@ -36,4 +35,3 @@ spec:
       memory: 64Mi
   kafka:
     pool: nav-prod
-
