@@ -10,10 +10,10 @@ spec:
   port: 8080
   liveness:
     path: /tms-event-test-producer/isAlive
-    initialDelay: 5
+    initialDelay: 30
   readiness:
     path: /tms-event-test-producer/isReady
-    initialDelay: 5
+    initialDelay: 15
   replicas:
     min: 1
     max: 1
