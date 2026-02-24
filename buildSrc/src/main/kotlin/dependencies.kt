@@ -1,7 +1,7 @@
 import default.*
 
 object Utkast: DependencyGroup {
-    override val version get() = "20230203100430-ecf5208"
+    override val version get() = "1.1.0-beta"
     override val groupId get() = "no.nav.tms.utkast"
 
     val builder get() = dependency("builder")
@@ -16,7 +16,7 @@ object SulkyUlid: DependencyGroup {
 
 object TmsVarselBuilder: DependencyGroup {
     override val groupId get() = "no.nav.tms.varsel"
-    override val version get() = "2.1.0-beta"
+    override val version get() = "2.1.1"
 
     val kotlinBuilder get() = dependency("kotlin-builder")
     val javabuilder get() = dependency("java-builder")

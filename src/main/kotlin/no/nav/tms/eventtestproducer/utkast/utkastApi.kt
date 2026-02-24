@@ -9,7 +9,7 @@ import no.nav.tms.common.util.config.StringEnvVar
 import no.nav.tms.eventtestproducer.setup.innloggetBruker
 import java.util.*
 
-fun Route.utkastApi(producer: UtkastRapidProducer, multiProducer: MultiUtkastProducer) {
+fun Route.utkastApi(producer: UtkastProducer, multiProducer: MultiUtkastProducer) {
     get("/uuid/generate") {
         call.respondText(UUID.randomUUID().toString())
     }
