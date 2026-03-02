@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -27,7 +26,7 @@ import org.junit.jupiter.api.Test
 import java.text.DateFormat
 import java.time.ZonedDateTime
 
-class MicrofrontendsApiTest {
+class VarselApiTest {
 
     private val mockProducer = MockProducer(
         false,
@@ -57,7 +56,7 @@ class MicrofrontendsApiTest {
             type = "beskjed",
             tekst = "Hei, hei!",
             spraak = "nb",
-            link = "https://linky",
+            link = "https://linky.nav.no",
             eksternVarsling = true,
             preferertKanal = "SMS",
             utsettSendingTil = null,
@@ -86,7 +85,7 @@ class MicrofrontendsApiTest {
             it["produsent"]["appnavn"].asText() shouldBe testAppName
             it["eksternVarsling"]["prefererteKanaler"][0].asText() shouldBe "SMS"
             it["aktivFremTil"] .shouldBeNull()
-            it["link"].asText() shouldBe "https://linky"
+            it["link"].asText() shouldBe "https://linky.nav.no"
             it["metadata"]["builder_lang"].asText() shouldBe "kotlin"
         }
     }
@@ -118,7 +117,7 @@ class MicrofrontendsApiTest {
         val oppgave = varselRequest(
             type = "N/A",
             tekst = "Hei, hei!",
-            link = "https://linky"
+            link = "https://linky.nav.no"
         )
 
         client.post("/produce/oppgave") {
@@ -130,7 +129,7 @@ class MicrofrontendsApiTest {
 
         mockProducer.inspectEvent {
             it["type"].asText() shouldBe "oppgave"
-            it["link"].asText() shouldBe "https://linky"
+            it["link"].asText() shouldBe "https://linky.nav.no"
             it["tekster"][0]["tekst"].asText() shouldBe "Hei, hei!"
         }
     }
@@ -141,7 +140,7 @@ class MicrofrontendsApiTest {
         val innboks = varselRequest(
             type = "N/A",
             tekst = "Hei, hei!",
-            link = "https://linky"
+            link = "https://linky.nav.no"
         )
 
         client.post("/produce/innboks") {
@@ -153,7 +152,7 @@ class MicrofrontendsApiTest {
 
         mockProducer.inspectEvent {
             it["type"].asText() shouldBe "innboks"
-            it["link"].asText() shouldBe "https://linky"
+            it["link"].asText() shouldBe "https://linky.nav.no"
             it["tekster"][0]["tekst"].asText() shouldBe "Hei, hei!"
         }
     }

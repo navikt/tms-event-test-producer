@@ -16,7 +16,7 @@ object SulkyUlid: DependencyGroup {
 
 object TmsVarselBuilder: DependencyGroup {
     override val groupId get() = "no.nav.tms.varsel"
-    override val version get() = "2.1.1"
+    override val version get() = "2.2.0"
 
     val kotlinBuilder get() = dependency("kotlin-builder")
     val javabuilder get() = dependency("java-builder")
