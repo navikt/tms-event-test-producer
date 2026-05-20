@@ -1,13 +1,10 @@
 package no.nav.tms.eventtestproducer.utkast
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
-import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
+import no.nav.tms.token.support.user.token.verification.UserPrincipal
 import no.nav.tms.utkast.builder.UtkastJsonBuilder
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -17,7 +14,7 @@ class UtkastProducer(
 ) {
     val log  = KotlinLogging.logger { }
 
-    fun createUtkast(user: IdportenUser, utkastCreate: UtkastCreate) {
+    fun createUtkast(user: UserPrincipal, utkastCreate: UtkastCreate) {
         val json = UtkastJsonBuilder()
             .withIdent(user.ident)
             .withUtkastId(utkastCreate.utkastId)
@@ -36,7 +33,7 @@ class UtkastProducer(
         log.info { "Produsert utkast-created på rapid med utkastId ${utkastCreate.utkastId}" }
     }
 
-    fun updateUtkast(user: IdportenUser, utkastUpdate: UtkastUpdate) {
+    fun updateUtkast(user: UserPrincipal, utkastUpdate: UtkastUpdate) {
         val json = UtkastJsonBuilder()
             .withIdent(user.ident)
             .withUtkastId(utkastUpdate.utkastId)
@@ -57,7 +54,7 @@ class UtkastProducer(
 
         val producerRecord = ProducerRecord(topicName, utkastUpdate.utkastId, json)
         kafkaProducer.send(producerRecord)
-        log.info("Produsert utkast-updated på rapid med utkastId ${utkastUpdate.utkastId}")
+        log.info { "Produsert utkast-updated på rapid med utkastId ${utkastUpdate.utkastId}" }
     }
 
     fun deleteUtkast(utkastId: String) {
@@ -67,12 +64,12 @@ class UtkastProducer(
 
         val producerRecord = ProducerRecord(topicName, utkastId, json)
         kafkaProducer.send(producerRecord)
-        log.info("Produsert utkast-deleted på rapid med utkastId $utkastId")
+        log.info { "Produsert utkast-deleted på rapid med utkastId $utkastId" }
     }
 
     fun sendEvent(utkastId: String, json: String) {
         val producerRecord = ProducerRecord(topicName, utkastId, json)
         kafkaProducer.send(producerRecord)
-        log.info("Produsert utkast-event på rapid med utkastId $utkastId")
+        log.info { "Produsert utkast-event på rapid med utkastId $utkastId" }
     }
 }

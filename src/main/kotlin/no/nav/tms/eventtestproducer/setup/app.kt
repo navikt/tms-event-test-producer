@@ -15,11 +15,10 @@ import io.ktor.server.routing.*
 import no.nav.tms.eventtestproducer.microfrontend.microfrontedApi
 import no.nav.tms.eventtestproducer.utkast.utkastApi
 import no.nav.tms.eventtestproducer.varsel.varselApi
-import no.nav.tms.token.support.idporten.sidecar.IdPortenLogin
-import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance.SUBSTANTIAL
-import no.nav.tms.token.support.idporten.sidecar.idPorten
-import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
-import no.nav.tms.token.support.idporten.sidecar.user.IdportenUserFactory
+import no.nav.tms.token.support.user.login.routes.UserLoginRoutes
+import no.nav.tms.token.support.user.token.verification.LevelOfAssurance
+import no.nav.tms.token.support.user.token.verification.UserPrincipal
+import no.nav.tms.token.support.user.token.verification.userToken
 import java.text.DateFormat
 
 fun main() {
@@ -52,13 +51,12 @@ fun Application.testProducerApi(appContext: ApplicationContext) {
     }
 
     authentication {
-        idPorten {
-            setAsDefault = true
-            levelOfAssurance = SUBSTANTIAL
+        userToken {
+            levelOfAssurance = LevelOfAssurance.Substantial
         }
     }
 
-    install(IdPortenLogin)
+    install(UserLoginRoutes)
 
     install(CORS) {
         allowHost(appContext.environment.corsAllowedOrigins, listOf(appContext.environment.corsAllowedSchemes))
@@ -78,6 +76,6 @@ fun Application.testProducerApi(appContext: ApplicationContext) {
     }
 }
 
-val RoutingContext.innloggetBruker: IdportenUser
-    get() = IdportenUserFactory.createIdportenUser(call)
+val RoutingContext.innloggetBruker
+    get() = call.principal<UserPrincipal>() ?: throw IllegalArgumentException("Fant ikke UserPrincipal i context")
 

@@ -16,8 +16,9 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.routing.routing
 import io.ktor.server.testing.testApplication
-import no.nav.tms.token.support.idporten.sidecar.mock.LevelOfAssurance
-import no.nav.tms.token.support.idporten.sidecar.mock.idPortenMock
+import no.nav.tms.token.support.user.token.verification.Issuer
+import no.nav.tms.token.support.user.token.verification.LevelOfAssurance
+import no.nav.tms.token.support.user.token.verificaton.mock.userTokenMock
 import no.nav.tms.varsel.builder.BuilderEnvironment
 import org.apache.kafka.clients.producer.MockProducer
 import org.apache.kafka.common.serialization.StringSerializer
@@ -176,11 +177,13 @@ class VarselApiTest {
             }
 
             authentication {
-                idPortenMock {
-                    setAsDefault = true
-                    staticLevelOfAssurance = LevelOfAssurance.HIGH
-                    alwaysAuthenticated = true
-                    staticUserPid = ident
+                userTokenMock {
+                    configureIssuers(Issuer.IdPorten)
+                    levelOfAssurance = LevelOfAssurance.Substantial
+                    enableDefaultAuthentication {
+                        tokenLoa = LevelOfAssurance.High
+                        tokenIdent = ident
+                    }
                 }
             }
 
