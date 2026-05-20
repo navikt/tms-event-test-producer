@@ -12,8 +12,9 @@ import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.tms.token.support.idporten.sidecar.mock.LevelOfAssurance
-import no.nav.tms.token.support.idporten.sidecar.mock.idPortenMock
+import no.nav.tms.token.support.user.token.verification.Issuer
+import no.nav.tms.token.support.user.token.verification.LevelOfAssurance
+import no.nav.tms.token.support.user.token.verificaton.mock.userTokenMock
 import org.junit.jupiter.api.Test
 
 class MicrofrontendsApiTest {
@@ -119,11 +120,13 @@ class MicrofrontendsApiTest {
 
     fun ApplicationTestBuilder.setupMicrofrontendApi() = application {
         authentication {
-            idPortenMock {
-                setAsDefault = true
-                staticLevelOfAssurance = LevelOfAssurance.HIGH
-                alwaysAuthenticated = true
-                staticUserPid = "12345678910"
+            userTokenMock {
+                configureIssuers(Issuer.IdPorten)
+                levelOfAssurance = LevelOfAssurance.Substantial
+                enableDefaultAuthentication {
+                    tokenLoa = LevelOfAssurance.High
+                    tokenIdent = "12345678910"
+                }
             }
         }
 

@@ -1,8 +1,8 @@
 package no.nav.tms.eventtestproducer.varsel
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import no.nav.tms.token.support.idporten.sidecar.LevelOfAssurance
-import no.nav.tms.token.support.idporten.sidecar.user.IdportenUser
+import no.nav.tms.token.support.user.token.verification.LevelOfAssurance
+import no.nav.tms.token.support.user.token.verification.UserPrincipal
 import no.nav.tms.varsel.action.*
 import no.nav.tms.varsel.builder.OpprettVarselBuilder
 import no.nav.tms.varsel.builder.VarselActionBuilder
@@ -17,7 +17,7 @@ class VarselProducer(
 
     private val log = KotlinLogging.logger {}
 
-    fun produceOpprettVarselForUser(innloggetBruker: IdportenUser, dto: ProduceVarselRequest) {
+    fun produceOpprettVarselForUser(innloggetBruker: UserPrincipal, dto: ProduceVarselRequest) {
         try {
             val varselId = UUID.randomUUID().toString()
 
@@ -34,7 +34,7 @@ class VarselProducer(
         kafkaProducer.send(ProducerRecord(topicName, key, event))
     }
 
-    private fun opprettVarselEvent(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselRequest): String {
+    private fun opprettVarselEvent(innloggetBruker: UserPrincipal, eventId: String, dto: ProduceVarselRequest): String {
         return if (dto.javaBuilder) {
             withJavaBuilder(innloggetBruker, eventId, dto)
         } else {
@@ -42,7 +42,7 @@ class VarselProducer(
         }
     }
 
-    private fun withKotlinBuilder(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselRequest): String {
+    private fun withKotlinBuilder(innloggetBruker: UserPrincipal, eventId: String, dto: ProduceVarselRequest): String {
         return VarselActionBuilder.opprett {
             type = parseEnum<Varseltype>(dto.type)
             varselId = eventId
@@ -68,7 +68,7 @@ class VarselProducer(
         }
     }
 
-    private fun withJavaBuilder(innloggetBruker: IdportenUser, eventId: String, dto: ProduceVarselRequest): String {
+    private fun withJavaBuilder(innloggetBruker: UserPrincipal, eventId: String, dto: ProduceVarselRequest): String {
         return OpprettVarselBuilder.newInstance()
             .withType(parseEnum<Varseltype>(dto.type))
             .withVarselId(eventId)
@@ -104,8 +104,8 @@ class VarselProducer(
 
     private fun mapSensitivitet(loa: LevelOfAssurance): Sensitivitet {
        return when(loa) {
-           LevelOfAssurance.SUBSTANTIAL -> Sensitivitet.Substantial
-           LevelOfAssurance.HIGH -> Sensitivitet.High
+           LevelOfAssurance.Substantial -> Sensitivitet.Substantial
+           LevelOfAssurance.High -> Sensitivitet.High
        }
     }
 }

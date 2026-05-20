@@ -24,7 +24,7 @@ dependencies {
     implementation(JacksonDatatype.datatypeJsr310)
     implementation(Kafka.clients)
     implementation(KotlinLogging.logging)
-    implementation(Ktor.Client.apache)
+    implementation(Ktor.Client.apache5)
     implementation(Ktor.Client.contentNegotiation)
     implementation(Ktor.Serialization.jackson)
     implementation(Ktor.Server.auth)
@@ -35,7 +35,8 @@ dependencies {
     implementation(Ktor.Server.netty)
     implementation(Logstash.logbackEncoder)
     implementation(SulkyUlid.sulkyUlid)
-    implementation(TmsKtorTokenSupport.idportenSidecar)
+    implementation(TmsKtorTokenSupport.userTokenVerification)
+    implementation(TmsKtorTokenSupport.userLoginRoutes)
     implementation(Utkast.builder)
     implementation(TmsVarselBuilder.kotlinBuilder)
     implementation(TmsVarselBuilder.javabuilder)
@@ -52,7 +53,7 @@ dependencies {
     testImplementation(Ktor.Test.clientMock)
     testImplementation(Mockk.mockk)
     testImplementation(Ktor.Test.serverTestHost)
-    testImplementation(TmsKtorTokenSupport.idportenSidecarMock)
+    testImplementation(TmsKtorTokenSupport.userTokenVerificationMock)
 }
 
 application {
