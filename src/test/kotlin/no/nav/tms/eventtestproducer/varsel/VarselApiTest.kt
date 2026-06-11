@@ -91,6 +91,38 @@ class VarselApiTest {
         }
     }
 
+
+    @Test
+    fun `oppretter flere varsler på topic`() = testProducerApi { client ->
+
+        val request = varselRequest(
+            type = "beskjed",
+            tekst = "Hei, hei!",
+            spraak = "nb",
+            link = "https://linky.nav.no",
+            eksternVarsling = true,
+            preferertKanal = "SMS",
+            utsettSendingTil = null,
+            kanBatches = true,
+            epostVarslingstekst = null,
+            epostVarslingstittel = null,
+            smsVarslingstekst = "Ess emm ess",
+            javaBuilder = false,
+        )
+
+        val antall = 5
+
+        client.post("/produce/varsel") {
+            parameter("antall", antall)
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.let {
+            it.status.shouldNotBeNull()
+        }
+
+        mockProducer.history().size shouldBe antall
+    }
+
     @Test
     fun `oppretter varsel etter kall mot legacy-api for beskjed`() = testProducerApi { client ->
 
