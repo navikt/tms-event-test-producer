@@ -47,10 +47,6 @@ fun Route.varselApi(varselProducer: VarselProducer) {
             contentType = ContentType.Text.Plain
         )
     }
-
-    post("/produce/varsel") {
-
-    }
 }
 
 private val RoutingContext.typeParam get() = call.pathParameters["type"]!!
