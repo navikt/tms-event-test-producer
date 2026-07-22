@@ -1,13 +1,11 @@
 package no.nav.tms.eventtestproducer.varsel
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.nav.tms.eventtestproducer.setup.innloggetBruker
 import no.nav.tms.token.support.user.token.verification.UserPrincipal
-import java.time.ZonedDateTime
 import kotlin.math.min
 
 fun Route.varselApi(varselProducer: VarselProducer) {
@@ -55,7 +53,7 @@ fun Route.varselApi(varselProducer: VarselProducer) {
         )
     }
 
-    post("/varsel/deactivate-recently-producer") {
+    post("/varsel/deactivate-recently-produced") {
         val toDactivate = producedCache.remove(innloggetBruker.ident)
 
         if (toDactivate == null) {
@@ -69,7 +67,7 @@ fun Route.varselApi(varselProducer: VarselProducer) {
             }
 
             call.respondText(
-                text = "Inaktiverte ${toDactivate.size} varsler som ble produsert fra delle appen.",
+                text = "Inaktiverte ${toDactivate.size} varsler som ble produsert fra denne appen.",
                 contentType = ContentType.Text.Plain
             )
         }
