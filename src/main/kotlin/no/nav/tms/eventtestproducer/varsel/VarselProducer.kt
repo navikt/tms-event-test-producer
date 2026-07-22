@@ -17,7 +17,7 @@ class VarselProducer(
 
     private val log = KotlinLogging.logger {}
 
-    fun produceOpprettVarselForUser(innloggetBruker: UserPrincipal, dto: ProduceVarselRequest) {
+    fun produceOpprettVarselForUser(innloggetBruker: UserPrincipal, dto: ProduceVarselRequest): String? {
         try {
             val varselId = UUID.randomUUID().toString()
 
@@ -25,8 +25,24 @@ class VarselProducer(
                 key = varselId,
                 event = opprettVarselEvent(innloggetBruker, varselId, dto)
             )
+
+            return varselId
         } catch (e: Exception) {
             log.error(e) { "Det skjedde en feil ved produsering av et event for brukeren $innloggetBruker" }
+            return null
+        }
+    }
+
+    fun produceInaktiverVarsel(varselIdToDeactivate: String) {
+        try {
+            sendEvent(
+                key = varselIdToDeactivate,
+                event = VarselActionBuilder.inaktiver {
+                    varselId = varselIdToDeactivate
+                }
+            )
+        } catch (e: Exception) {
+            log.error(e) { "Det skjedde en feil ved produsering inaktiver-event." }
         }
     }
 

@@ -6,6 +6,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.nav.tms.eventtestproducer.setup.innloggetBruker
+import no.nav.tms.token.support.user.token.verification.UserPrincipal
 import java.time.ZonedDateTime
 import kotlin.math.min
 
@@ -18,7 +19,9 @@ fun Route.varselApi(varselProducer: VarselProducer) {
 
         if (antall == null || antall < 2) {
 
-            varselProducer.produceOpprettVarselForUser(innloggetBruker, varselRequest)
+            varselProducer.produceOpprettVarselForUser(innloggetBruker, varselRequest)?.let {
+                varselProduced(innloggetBruker, it)
+            }
 
             call.respondText(
                 text = "Et opprett-varsel event med type [${varselRequest.type}] er blitt lagt på kafka.",
@@ -27,7 +30,9 @@ fun Route.varselApi(varselProducer: VarselProducer) {
             val clampedAntall = min(antall, 50_000) // Hindre bestilling av ekstreme mengder varsler
 
             repeat(clampedAntall) {
-                varselProducer.produceOpprettVarselForUser(innloggetBruker, varselRequest)
+                varselProducer.produceOpprettVarselForUser(innloggetBruker, varselRequest)?.let {
+                    varselProduced(innloggetBruker, it)
+                }
             }
 
             call.respondText(
@@ -41,12 +46,41 @@ fun Route.varselApi(varselProducer: VarselProducer) {
 
         varselRequest.type = typeParam
 
-        varselProducer.produceOpprettVarselForUser(innloggetBruker, varselRequest)
+        varselProducer.produceOpprettVarselForUser(innloggetBruker, varselRequest)?.let {
+            varselProduced(innloggetBruker, it)
+        }
         call.respondText(
             text = "Et opprett-varsel event med type [$typeParam] er blitt lagt på kafka.",
             contentType = ContentType.Text.Plain
         )
     }
+
+    post("/varsel/deactivate-recently-producer") {
+        val toDactivate = producedCache.remove(innloggetBruker.ident)
+
+        if (toDactivate == null) {
+            call.respondText(
+                text = "Ingen varsler produsert fra denne appen siden forrige kall eller deploy.",
+                contentType = ContentType.Text.Plain
+            )
+        } else {
+            toDactivate.forEach {
+                varselProducer.produceInaktiverVarsel(it)
+            }
+
+            call.respondText(
+                text = "Inaktiverte ${toDactivate.size} varsler som ble produsert fra delle appen.",
+                contentType = ContentType.Text.Plain
+            )
+        }
+    }
+}
+
+private val producedCache = mutableMapOf<String, MutableSet<String>>()
+private fun varselProduced(user: UserPrincipal, varselId: String) {
+    producedCache.getOrPut(user.ident) {
+        mutableSetOf()
+    }.add(varselId)
 }
 
 private val RoutingContext.typeParam get() = call.pathParameters["type"]!!
