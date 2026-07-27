@@ -11,5 +11,6 @@ data class Environment(
     val corsAllowedOrigins: String = getEnvVar("CORS_ALLOWED_ORIGINS"),
     val corsAllowedSchemes: String = getEnvVar("CORS_ALLOWED_SCHEMES", "https"),
     val utkastTopicName: String = "min-side.aapen-utkast-v1",
-    val brukervarselTopicName: String = "min-side.aapen-brukervarsel-v1"
+    val brukervarselTopicName: String = "min-side.aapen-brukervarsel-v1",
+    val statuskortTopicName: String = "min-side.aapen-statuskort-v1"
 )

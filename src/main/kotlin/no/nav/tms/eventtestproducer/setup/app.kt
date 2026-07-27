@@ -13,6 +13,7 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.routing.*
 import no.nav.tms.eventtestproducer.microfrontend.microfrontedApi
+import no.nav.tms.eventtestproducer.statuskort.statuskortApi
 import no.nav.tms.eventtestproducer.utkast.utkastApi
 import no.nav.tms.eventtestproducer.varsel.varselApi
 import no.nav.tms.token.support.user.login.routes.UserLoginRoutes
@@ -71,6 +72,7 @@ fun Application.testProducerApi(appContext: ApplicationContext) {
                 utkastApi(appContext.utkastRapidProducer, appContext.utkastMultiProducer)
                 microfrontedApi(appContext.microfrontendProducer)
                 varselApi(appContext.varselProducer)
+                statuskortApi(appContext.statuskortProducer)
             }
         }
     }

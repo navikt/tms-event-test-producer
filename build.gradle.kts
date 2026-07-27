@@ -35,11 +35,13 @@ dependencies {
     implementation(Ktor.Server.netty)
     implementation(Logstash.logbackEncoder)
     implementation(SulkyUlid.sulkyUlid)
+    implementation(TmsKafkaTools.kafkaProducerUtils)
     implementation(TmsKtorTokenSupport.userTokenVerification)
     implementation(TmsKtorTokenSupport.userLoginRoutes)
     implementation(Utkast.builder)
     implementation(TmsVarselBuilder.kotlinBuilder)
     implementation(TmsVarselBuilder.javabuilder)
+    implementation(TmsStatuskortBuilder.kotlinBuilder)
     implementation(TmsCommonLib.utils)
 
     testImplementation(JunitPlatform.launcher)

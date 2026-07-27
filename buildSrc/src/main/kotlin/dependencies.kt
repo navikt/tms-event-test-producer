@@ -21,3 +21,10 @@ object TmsVarselBuilder: DependencyGroup {
     val kotlinBuilder get() = dependency("kotlin-builder")
     val javabuilder get() = dependency("java-builder")
 }
+
+object TmsStatuskortBuilder: DependencyGroup {
+    override val groupId get() = "no.nav.tms.statuskort"
+    override val version get() = "0.1.0"
+
+    val kotlinBuilder get() = dependency("kotlin-builder")
+}
