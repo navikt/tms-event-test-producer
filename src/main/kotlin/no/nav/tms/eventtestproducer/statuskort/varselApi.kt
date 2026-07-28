@@ -24,6 +24,8 @@ fun Route.statuskortApi(statuskortProducer: StatuskortProducer) {
             }
         }
 
+        call.response.header("statuskortId", statuskortId)
+
         call.respondText("Et $type-Statuskort event med id [$statuskortId] er blitt lagt på kafka.")
     }
 }
