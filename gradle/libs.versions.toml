@@ -1,0 +1,12 @@
+[versions]
+utkast = "1.1.0-beta"
+sulkyUlid = "8.2.0"
+varselBuilder = "2.2.0"
+statuskortBuilder = "0.1.0"
+
+[libraries]
+utkast-builder = { group = "no.nav.tms.utkast", name = "builder", version.ref = "utkast" }
+sulky-ulid = { group = "de.huxhorn.sulky", name = "de.huxhorn.sulky.ulid", version.ref = "sulkyUlid" }
+varsel-kotlin-builder = { group = "no.nav.tms.varsel", name = "kotlin-builder", version.ref = "varselBuilder" }
+varsel-java-builder = { group = "no.nav.tms.varsel", name = "java-builder", version.ref = "varselBuilder" }
+statuskort-kotlin-builder = { group = "no.nav.tms.statuskort", name = "kotlin-builder", version.ref = "statuskortBuilder" }
