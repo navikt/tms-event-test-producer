@@ -1,8 +1,6 @@
 plugins {
-    kotlin("jvm").version(Kotlin.version)
-
-    id(TmsJarBundling.plugin)
-
+    alias(managed.plugins.kotlin)
+    alias(managed.plugins.tms.jarBundling)
     application
 }
 
@@ -24,16 +22,12 @@ dependencies {
     implementation(managed.jackson.datatypeJsr310)
     implementation(managed.kafka.clients)
     implementation(managed.kotlinLogging)
-    implementation(managed.ktor.client.apache5)
-    implementation(managed.ktor.client.contentNegotiation)
     implementation(managed.ktor.serialization.jackson)
     implementation(managed.ktor.server.auth)
-    implementation("io.ktor:ktor-server-auth-jwt:${managed.versions.ktor.get()}")
     implementation(managed.ktor.server.contentNegotiation)
     implementation(managed.ktor.server.cors)
     implementation(managed.ktor.server.defaultHeaders)
     implementation(managed.ktor.server.netty)
-    implementation(managed.logback.encoder)
     implementation(managed.tms.kafka.producerUtils)
     implementation(managed.tms.ktorTokenSupport.userToken.verification)
     implementation(managed.tms.ktorTokenSupport.userToken.loginRoutes)
@@ -45,18 +39,18 @@ dependencies {
     implementation(libs.varsel.java.builder)
     implementation(libs.statuskort.kotlin.builder)
 
-    testImplementation(managed.junit.launcher)
-    testImplementation(managed.jjwt.api)
-    testImplementation(managed.jjwt.impl)
-    testImplementation(managed.jjwt.orgjson)
+    runtimeOnly(managed.ktor.client.apache5)
+    runtimeOnly(managed.logback.encoder)
+
     testImplementation(managed.junit.api)
-    testImplementation(managed.junit.engine)
     testImplementation(managed.kotest.assertion)
-    testImplementation(managed.kotest.extensions)
-    testImplementation(managed.ktor.test.clientMock)
+    testImplementation(managed.ktor.client.contentNegotiation)
     testImplementation(managed.mockk)
     testImplementation(managed.ktor.test.server)
     testImplementation(managed.tms.ktorTokenSupport.userToken.verificationMock)
+
+    testRuntimeOnly(managed.junit.launcher)
+    testRuntimeOnly(managed.junit.engine)
 }
 
 application {
